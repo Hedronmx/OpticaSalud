@@ -280,6 +280,12 @@
                     <textarea class="form-control rounded-0" name="nota" placeholder="Escriba aqui" id="nota" rows="10"></textarea>
                   </div>
                 </div>
+                <div class="row mrg20">
+                  <div class="col col-md-12">
+                    <strong>Adjuntar Archivos</strong>
+                    <input type="file" id="archivo" accept="image/*, application/pdf" multiple>
+                  </div>
+                </div>
               </div>
               <div class="col-md-12 col-sm-12 col-lg-12">
                 <button class="green-bg brd-rd5" id="registrar"><i class="fa fa-check"></i>Registrar</button>
@@ -363,7 +369,7 @@
                       <label for="alergiascliente">Alergias</label>
                     </span>
                     <span class="">
-                      <input class="brd-rd5" type="text" name="otraenfermedadcliente" id="otraenfermedadcliente" placeholder="Otra Enfermedad" />
+                      <input class="brd-rd5" type="text" name="otraenfermedadcliente" id="otraenfermedadcliente" placeholder="Otras Enfermedades" />
                     </span>
                     <span class="">
                       <input class="brd-rd5" type="text" name="alergiamedicamentocliente" id="alergiamedicamentocliente" placeholder="Alergias por medicamentos" />
@@ -522,6 +528,12 @@
                   <div class="col col-md-12">
                     <strong>Nota</strong>
                     <textarea class="form-control rounded-0" name="notacliente" placeholder="Escriba aqui" id="notacliente" rows="10"></textarea>
+                  </div>
+                </div>
+                <div class="row mrg20">
+                  <div class="col col-md-12">
+                    <strong>Adjuntar Archivos</strong>
+                    <input type="file" id="archivocliente" accept="image/*, application/pdf" multiple>
                   </div>
                 </div>
               </div>
@@ -727,10 +739,10 @@
                     <li class="list-group-item" var="cliente.sinusitis" style="text-align:center">43</li>
                     <li class="list-group-item" var="cliente.dolordecabeza" style="text-align:center">43</li>
                     <li class="list-group-item" var="cliente.alergias" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.otraenfermedad" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.cirugia" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.alergiamedicamento" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.medicamentos" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.otraenfermedad" style="text-align:left">43</li>
+                    <li class="list-group-item" var="cliente.cirugia" style="text-align:lef">43</li>
+                    <li class="list-group-item" var="cliente.alergiamedicamento" style="text-align:left">43</li>
+                    <li class="list-group-item" var="cliente.medicamentos" style="text-align:left">43</li>
                   </ul>
                 </div>
                 <div class="col col-md-4">
@@ -754,6 +766,17 @@
                     <li class="list-group-item" var="cliente.carnosidad" style="text-align:center">43</li>
                   </ul>
                 </div>
+              </div>
+              
+              
+              <div class="row" style="margin-top:24px;">
+                <div class="col col-md-12">
+                  <p>Archivos</p>
+                </div>
+              </div>
+              <div class="row">
+                <ul class="list-group" id="adjuntos">
+                </ul>
               </div>
 
               <div class="row" style="margin-top:24px;">
