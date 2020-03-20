@@ -27,6 +27,7 @@ firebase.firestore().enablePersistence()
 
 const tabla = document.getElementById("tablaclientes");
 const db = firebase.firestore();
+const storageRef = firebase.storage().ref();
 const forma = document.querySelector('#nuevocliente')
 const receta = document.querySelector('#nuevareceta')
 const recetas = document.querySelector('#recetas')
@@ -470,8 +471,6 @@ forma.addEventListener('submit', (e) => {
     var carnosidad;
     var cirugia;
 
-
-
     if (forma.diabetes.checked) {
         diabetes = forma.diabetes.value
     } else {
@@ -580,6 +579,24 @@ forma.addEventListener('submit', (e) => {
         hipersensibilidad = "Hipersensibilidad Solar:";
     }
 
+    var archivo = document.getElementById("archivo").files;
+
+    var archivos = {}
+
+    if(archivo.length > 0) {
+        for (x = 0; x < archivo.length; ++x) {
+            var thisRef = storageRef.child("archivos/"+ forma.correo.value + "/" + archivo[x].name);
+
+            thisRef.put(archivo[x]).then(function(snapshot) {
+                console.log('Uploaded a blob or file!');
+            });
+            
+            archivos[x] = archivo[x].name
+        }
+    }
+    
+    console.log(archivos)
+
     db.collection('clientes').add({
             nombre: forma.nombre.value,
             telefono: forma.telefono.value,
@@ -632,7 +649,8 @@ forma.addEventListener('submit', (e) => {
             avceoi: forma.avceoi.value,
             nota: forma.nota.value,
             ultimacita: forma.ultimacita.value,
-            fecha: forma.ultimacita.value
+            fecha: forma.ultimacita.value,
+            archivos: archivos
         })
         .then(function() {
             console.log("Document successfully written!");
@@ -666,9 +684,9 @@ function cerrar() {
     $$.single("#direccioncliente").setAttribute("value", cliente.direccion)
     $$.single("#ocupacioncliente").setAttribute("value", cliente.ocupacion)
     $$.single("#edadcliente").setAttribute("value", cliente.edad)
-    $$.single("#medicamentoscliente").setAttribute("value", cliente.medicamentos)
-    $$.single("#alergiamedicamentocliente").setAttribute("value", cliente.alergiamedicamento)
-    $$.single("#otraenfermedadcliente").setAttribute("value", cliente.otraenfermedad)
+    $$.single("#medicamentoscliente").setAttribute("value", cliente.medicamentos.replace("Medicamentos que toma: ", ""))
+    $$.single("#alergiamedicamentocliente").setAttribute("value", cliente.alergiamedicamento.replace("Alergia por los medicamentos: ", ""))
+    $$.single("#otraenfermedadcliente").setAttribute("value", cliente.otraenfermedad.replace("Otras Enfermedades: ", ""))
     $$.single("#ultimacitaclientepicker").setAttribute("value", cliente.ultimacita)
     if (cliente.sexo == "Masculino") {
         $('#masculinocliente').prop('checked', true);
@@ -971,6 +989,25 @@ editar.addEventListener('submit', (e) => {
     } else {
         hipersensibilidad = "Hipersensibilidad Solar:";
     }
+    
+    var archivo = document.getElementById("archivocliente").files;
+
+        
+    var archivos = {}
+
+    if(archivo.length > 0) {
+        for (x = 0; x < archivo.length; ++x) {
+            var thisRef = storageRef.child("archivos/"+ cliente.correo + "/" + archivo[x].name);
+
+            thisRef.put(archivo[x]).then(function(snapshot) {
+                console.log('Uploaded a blob or file!');
+            });
+            
+            cliente.archivos[cliente.archivos.length] = archivo[x].name
+        }
+    }
+    
+    console.log(cliente.archivos)
 
     db.collection('clientes').doc(previd).update({
             nombre: editar.nombrecliente.value,
@@ -1023,6 +1060,7 @@ editar.addEventListener('submit', (e) => {
             proximacita: editar.proximacitacliente.value,
             nota: editar.notacliente.value,
             ultimacita: editar.ultimacitacliente.value,
+            archivos: cliente.archivos
         })
         .then(function() {
             console.log("Document successfully written!");
@@ -1091,6 +1129,7 @@ function rendercliente(id) {
         recetas.removeChild(recetas.firstChild);
     }
 
+
     docRef.get().then(function(doc) {
         if (doc.exists) {
             cliente = {
@@ -1112,8 +1151,8 @@ function rendercliente(id) {
                 otro: doc.data().otro,
                 cirugia: doc.data().cirugia,
                 medicamentos: "Medicamentos que toma: " + doc.data().medicamentos,
-                alergiamedicamento: "Alergias por medicamentos:" + doc.data().alergiamedicamento,
-                otraenfermedad: doc.data().otraenfermedad,
+                alergiamedicamento: "Alergia por los medicamentos: " + doc.data().alergiamedicamento,
+                otraenfermedad: "Otras Enfermedades: " + doc.data().otraenfermedad,
                 dolorojos: doc.data().dolorojos,
                 ojosllorosos: doc.data().ojosllorosos,
                 comezon: doc.data().comezon,
@@ -1145,14 +1184,43 @@ function rendercliente(id) {
                 previacita: doc.data().fecha,
                 ultimacita: doc.data().ultimacita,
                 nota: doc.data().nota,
-                ids: "Folio - " + id.substring(0, 4)
+                ids: "Folio - " + id.substring(0, 4),
+                archivos: doc.data().archivos
             };
             if (doc.data().nuevafecha == undefined){
                 cliente.proximacita = doc.data().proximacita
             } else {
                 cliente.proximacita = doc.data().nuevafecha
             }
+
             loadingcliente = false;
+            
+            var ul = document.getElementById("adjuntos");
+            var child = ul.lastElementChild;  
+              while (child) { 
+                  ul.removeChild(child); 
+                  child = ul.lastElementChild; 
+              } 
+            
+            if (cliente.archivos) {
+                for (var object in cliente.archivos) {
+                    storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]).getDownloadURL().then(function(i) {
+                        var newAnchor = document.createElement("a");
+                        var regex = i.match(/%2..*%2F(.*?)\?alt/)
+                        var url = regex[1].replace(/%20/g, " ");
+                        url = url.replace(/%26/g, "&");
+                        newAnchor.textContent = url;
+                        let li = document.createElement('li');
+                        li.setAttribute('class','list-group-item')
+                        li.appendChild(newAnchor);
+                        ul.appendChild(li);
+                        newAnchor.setAttribute('href', i);
+		               }).catch(function(error) {
+			             // Handle any errors
+		               });
+                    }
+            }
+
         } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -1180,6 +1248,19 @@ function rendercliente(id) {
 function borrarcliente() {
     if (confirm("¿Quieres borrar a este cliente?")) {
         db.collection('clientes').doc(previd).delete();
+        
+        if (cliente.archivos) {
+            for (var object in cliente.archivos) {
+                var desertRef = storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]);
+                desertRef.delete().then(function() {
+                // File deleted successfully
+                }).catch(function(error) {
+                // Uh-oh, an error occurred!
+                });
+
+            }
+        }
+        
         $("[data-dismiss=modal]").trigger({
             type: "click"
         });

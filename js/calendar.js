@@ -1,10 +1,13 @@
+ // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyAAe_cDwbvS-WSaoGmpwwDG49rYYvmOpe0",
-    authDomain: "brincos-9f9fd.firebaseapp.com",
-    databaseURL: "https://brincos-9f9fd.firebaseio.com",
-    projectId: "brincos-9f9fd",
-    storageBucket: "brincos-9f9fd.appspot.com",
-    messagingSenderId: "226015777999"
+    apiKey: "AIzaSyBGdbOP4-7nGCpjZrsm-IXQ17jiyd9_pKM",
+    authDomain: "olud-43cbe.firebaseapp.com",
+    databaseURL: "https://olud-43cbe.firebaseio.com",
+    projectId: "olud-43cbe",
+    storageBucket: "olud-43cbe.appspot.com",
+    messagingSenderId: "172724188141",
+    appId: "1:172724188141:web:9189f3d0ef74a9d15bade4",
+    measurementId: "G-93STHW8N59"
 };
 firebase.initializeApp(config);
 
@@ -21,22 +24,32 @@ firebase.firestore().enablePersistence()
         }
     });
 
+
+const tabla = document.getElementById("tablaclientes");
 const db = firebase.firestore();
-var loadingcal = true;
+const storageRef = firebase.storage().ref();
 const forma = document.querySelector('#nuevocliente')
 const receta = document.querySelector('#nuevareceta')
 const recetas = document.querySelector('#recetas')
 const clienteview = document.querySelector('#impresion')
 
+const editar = document.querySelector('#editarcliente')
+
 const editformreceta = document.querySelector('#editformreceta')
 
-const editar = document.querySelector('#editarcliente')
 var folio = 1;
 var cliente = {};
 var previd = null;
 var loadingcliente = true;
 var loadingmain = true;
+var recetasloading = false;
+var citaloading = false;
+var notaloading = false;
+var noclientes = true;
 
+var loadingevento = true;
+var previd=null;
+var loadingcal = true;
 var eventos = []
 
 function collect (){
@@ -181,7 +194,6 @@ function collect (){
 }
 
 
-
 function modal(id){
     previd= id;
     $('.cliente').modal('show');
@@ -239,6 +251,11 @@ function modal(id){
                 previacita: doc.data().fecha,
                 ultimacita: doc.data().ultimacita,
                 nota: doc.data().nota,
+                cirugia: doc.data().cirugia,
+                medicamentos: "Medicamentos que toma: " + doc.data().medicamentos,
+                alergiamedicamento: "Alergia por los medicamentos: " + doc.data().alergiamedicamento,
+                archivos: doc.data().archivos,
+                otraenfermedad: "Otras Enfermedades: " + doc.data().otraenfermedad,
                 ids: "Folio - " + id.substring(0, 4)
             };
             if (doc.data().nuevafecha == undefined){
@@ -247,6 +264,32 @@ function modal(id){
                 cliente.proximacita = doc.data().nuevafecha
             }
             loadingcliente = false;
+            
+            var ul = document.getElementById("adjuntos");
+            var child = ul.lastElementChild;  
+              while (child) { 
+                  ul.removeChild(child); 
+                  child = ul.lastElementChild; 
+              } 
+            
+            if (cliente.archivos) {
+                for (var object in cliente.archivos) {
+                    storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]).getDownloadURL().then(function(i) {
+                        var newAnchor = document.createElement("a");
+                        var regex = i.match(/%2..*%2F(.*?)\?alt/)
+                        var url = regex[1].replace(/%20/g, " ");
+                        url = url.replace(/%26/g, "&");
+                        newAnchor.textContent = url;
+                        let li = document.createElement('li');
+                        li.setAttribute('class','list-group-item')
+                        li.appendChild(newAnchor);
+                        ul.appendChild(li);
+                        newAnchor.setAttribute('href', i);
+		               }).catch(function(error) {
+			             // Handle any errors
+		               });
+                    }
+            }
         } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -270,425 +313,34 @@ function modal(id){
 
 }
 
-var cerrado = false;
 
-function cerrar() {
-    cerrado = true
-    $('.cliente').modal('hide')
-        $('.cliente').on('hidden.bs.modal', function() {
-            if (cerrado == true) {
-            $('.edit').modal('show')
-            cerrado = false;
-            }
-        })
-
-
-
-    $$.single("#nombrecliente").setAttribute("value", cliente.nombre)
-    $$.single("#telefonocliente").setAttribute("value", cliente.telefono)
-    $$.single("#correocliente").setAttribute("value", cliente.correo)
-    $$.single("#direccioncliente").setAttribute("value", cliente.direccion)
-    $$.single("#ocupacioncliente").setAttribute("value", cliente.ocupacion)
-    $$.single("#edadcliente").setAttribute("value", cliente.edad)
-    $$.single("#ultimacitaclientepicker").setAttribute("value", cliente.ultimacita)
-    if (cliente.sexo == "Masculino") {
-        $('#masculinocliente').prop('checked', true);
-        $('#femeninocliente').prop('checked', false);
-    } else {
-        $('#femeninocliente').prop('checked', true);
-        $('#masculinocliente').prop('checked', false);
-    }
-
-    if (cliente.diabetes == "Diabetes: <i class='fa fa-check'></i>") {
-        $('#diabetescliente').prop('checked', true);
-    } else {
-        $('#diabetescliente').prop('checked', false);
-    }
-    
-    if (cliente.carnosidad == "Carnosidad: <i class='fa fa-check'></i>") {
-        $('#carnosidadcliente').prop('checked', true);
-    } else {
-        $('#carnosidadcliente').prop('checked', false);
-    }
-
-    if (cliente.hipertension == "Hipertensión: <i class='fa fa-check'></i>") {
-        $('#hipertensioncliente').prop('checked', true);
-    } else {
-        $('#hipertensioncliente').prop('checked', false);
-    }
-
-    if (cliente.sinusitis == "Sinusitis: <i class='fa fa-check'></i>") {
-        $('#sinusitiscliente').prop('checked', true);
-    } else {
-        $('#sinusitiscliente').prop('checked', false);
-    }
-
-    if (cliente.dolordecabeza == "Dolor de Cabeza: <i class='fa fa-check'></i>") {
-        $('#dolordecabezacliente').prop('checked', true);
-    } else {
-        $('#dolordecabezacliente').prop('checked', false);
-    }
-
-    if (cliente.alergias == "Alergias: <i class='fa fa-check'></i>") {
-        $('#alergiascliente').prop('checked', true);
-    } else {
-        $('#alergiascliente').prop('checked', false);
-    }
-
-    if (cliente.cataratas == "Cataratas: <i class='fa fa-check'></i>") {
-        $('#cataratascliente').prop('checked', true);
-    } else {
-        $('#cataratascliente').prop('checked', false);
-    }
-
-    if (cliente.glaucoma == "Glaucoma: <i class='fa fa-check'></i>") {
-        $('#glaucomacliente').prop('checked', true);
-    } else {
-        $('#glaucomacliente').prop('checked', false);
-    }
-
-    if (cliente.ceguera == "Ceguera: <i class='fa fa-check'></i>") {
-        $('#cegueracliente').prop('checked', true);
-    } else {
-        $('#cegueracliente').prop('checked', false);
-    }
-
-
-    $$.single("#otrocliente").setAttribute("value", cliente.otro)
-
-    if (cliente.dolorojos == "Dolor de Ojos: <i class='fa fa-check'></i>") {
-        $('#dolorojoscliente').prop('checked', true);
-    } else {
-        $('#dolorojoscliente').prop('checked', false);
-    }
-
-    if (cliente.ojosllorosos == "Ojos Llorosos: <i class='fa fa-check'></i>") {
-        $('#ojosllorososcliente').prop('checked', true);
-    } else {
-        $('#ojosllorososcliente').prop('checked', false);
-    }
-
-    if (cliente.comezon == "Comezón: <i class='fa fa-check'></i>") {
-        $('#comezoncliente').prop('checked', true);
-    } else {
-        $('#comezoncliente').prop('checked', false);
-    }
-
-    if (cliente.secresion == "Secresión: <i class='fa fa-check'></i>") {
-        $('#secresioncliente').prop('checked', true);
-    } else {
-        $('#secresioncliente').prop('checked', false);
-    }
-
-    if (cliente.traumatismo == "Traumatismo: <i class='fa fa-check'></i>") {
-        $('#traumatismocliente').prop('checked', true);
-    } else {
-        $('#traumatismocliente').prop('checked', false);
-    }
-
-    if (cliente.miodesopsia == "Miodesopsia: <i class='fa fa-check'></i>") {
-        $('#miodesopsiacliente').prop('checked', true);
-    } else {
-        $('#miodesopsiacliente').prop('checked', false);
-    }
-
-    if (cliente.anillos == "Anillos o Halos: <i class='fa fa-check'></i>") {
-        $('#anilloscliente').prop('checked', true);
-    } else {
-        $('#anilloscliente').prop('checked', false);
-    }
-
-    if (cliente.hipersensibilidad == "Hipersensibilidad Solar: <i class='fa fa-check'></i>") {
-        $('#hipersensibilidadcliente').prop('checked', true);
-    } else {
-        $('#hipersensibilidadcliente').prop('checked', false);
-    }
-
-    $$.single("#sphodcliente").setAttribute("value", cliente.sphod)
-
-    $$.single("#cilodcliente").setAttribute("value", cliente.cilod)
-
-    $$.single("#ejeodcliente").setAttribute("value", cliente.ejeod)
-
-    $$.single("#addodcliente").setAttribute("value", cliente.addod)
-
-    $$.single("#diamodcliente").setAttribute("value", cliente.diamod)
-
-    $$.single("#alturaodcliente").setAttribute("value", cliente.alturaod)
-
-    $$.single("#xeratometriaodcliente").setAttribute("value", cliente.xeratometriaod)
-
-
-    $$.single("#sphoicliente").setAttribute("value", cliente.sphoi)
-
-    $$.single("#ciloicliente").setAttribute("value", cliente.ciloi)
-
-    $$.single("#ejeoicliente").setAttribute("value", cliente.ejeoi)
-
-    $$.single("#addoicliente").setAttribute("value", cliente.addoi)
-
-    $$.single("#diamoicliente").setAttribute("value", cliente.diamoi)
-
-    $$.single("#alturaoicliente").setAttribute("value", cliente.alturaoi)
-
-    $$.single("#xeratometriaoicliente").setAttribute("value", cliente.xeratometriaoi)
-
-    $$.single("#avscodcliente").setAttribute("value", cliente.avscod)
-
-    $$.single("#avscoicliente").setAttribute("value", cliente.avscoi)
-
-    $$.single("#avceodcliente").setAttribute("value", cliente.avceod)
-
-    $$.single("#avceoicliente").setAttribute("value", cliente.avceoi)
-
-    $$.single("#datepickercliente").setAttribute("value", cliente.proximacita)
-
-    $$.single("#notacliente").innerText = cliente.nota
-
-
-}
-
-
-var editarcerrado = false;
-
-editar.addEventListener('submit', (e) => {
-    e.preventDefault();
-    editarcerrado = true;
-    var diabetes;
-    var hipertension;
-    var sinusitis;
-    var dolordecabeza;
-    var alergias;
-    var cataratas;
-    var glaucoma;
-    var ceguera;
-    var dolorojos;
-    var ojosllorosos;
-    var comezon;
-    var secresion;
-    var traumatismo;
-    var miodesopsia;
-    var anillos;
-    var hipersensibilidad;
-    var carnosidad;
-
-    var fechanueva = new Date();
-
-    if (cliente.fecha == fechanueva.toDateString()) {
-        fechanueva = cliente.fecha
-    }
-
-    if (editar.diabetescliente.checked) {
-        diabetes = editar.diabetescliente.value
-    } else {
-        diabetes = "Diabetes:";
-    }
-
-    if (editar.hipertensioncliente.checked) {
-        hipertension = editar.hipertensioncliente.value
-    } else {
-        hipertension = "Hipertensión:";
-    }
-    
-    if (editar.carnosidadcliente.checked) {
-        carnosidad = editar.carnosidadcliente.value
-    } else {
-        carnosidad = "Carnosidad:";
-    }
-
-    if (editar.sinusitiscliente.checked) {
-        sinusitis = editar.sinusitiscliente.value
-    } else {
-        sinusitis = "Sinusitis:";
-    }
-
-    if (editar.dolordecabezacliente.checked) {
-        dolordecabeza = editar.dolordecabezacliente.value
-    } else {
-        dolordecabeza = "Dolor de Cabeza:";
-    }
-
-    if (editar.alergiascliente.checked) {
-        alergias = editar.alergiascliente.value
-    } else {
-        alergias = "Alergias:";
-    }
-
-    if (editar.cataratascliente.checked) {
-        cataratas = editar.cataratascliente.value
-    } else {
-        cataratas = "Cataratas:";
-    }
-
-    if (editar.glaucomacliente.checked) {
-        glaucoma = editar.glaucomacliente.value
-    } else {
-        glaucoma = "Glaucoma:";
-    }
-
-    if (editar.cegueracliente.checked) {
-        ceguera = editar.cegueracliente.value
-    } else {
-        ceguera = "Ceguera:";
-    }
-
-
-    if (editar.dolorojoscliente.checked) {
-        dolorojos = editar.dolorojoscliente.value
-    } else {
-        dolorojos = "Dolor de Ojos:";
-    }
-
-    if (editar.ojosllorososcliente.checked) {
-        ojosllorosos = editar.ojosllorososcliente.value
-    } else {
-        ojosllorosos = "Ojos Llorosos:";
-    }
-
-    if (editar.comezoncliente.checked) {
-        comezon = editar.comezoncliente.value
-    } else {
-        comezon = "Comezón:";
-    }
-
-    if (editar.secresioncliente.checked) {
-        secresion = editar.secresioncliente.value
-    } else {
-        secresion = "Secresión:";
-    }
-
-    if (editar.traumatismocliente.checked) {
-        traumatismo = editar.traumatismocliente.value
-    } else {
-        traumatismo = "Traumatismo:";
-    }
-
-    if (editar.miodesopsiacliente.checked) {
-        miodesopsia = editar.miodesopsiacliente.value
-    } else {
-        miodesopsia = "Miodesopsia:";
-    }
-
-    if (editar.anilloscliente.checked) {
-        anillos = editar.anilloscliente.value
-    } else {
-        anillos = "Anillos o Halos:";
-    }
-
-    if (editar.hipersensibilidadcliente.checked) {
-        hipersensibilidad = editar.hipersensibilidadcliente.value
-    } else {
-        hipersensibilidad = "Hipersensibilidad Solar:";
-    }
-
-    db.collection('clientes').doc(previd).update({
-            nombre: editar.nombrecliente.value,
-            telefono: editar.telefonocliente.value,
-            correo: editar.correocliente.value,
-            edad: editar.edadcliente.value,
-            ocupacion: editar.ocupacioncliente.value,
-            direccion: editar.direccioncliente.value,
-            sexo: editar.sexocliente.value,
-            diabetes: diabetes,
-            hipertension: hipertension,
-            sinusitis: sinusitis,
-            dolordecabeza: dolordecabeza,
-            alergias: alergias,
-            cataratas: cataratas,
-            glaucoma: glaucoma,
-            ceguera: ceguera,
-            otro: editar.otrocliente.value,
-            dolorojos: dolorojos,
-            ojosllorosos: ojosllorosos,
-            comezon: comezon,
-            secresion: secresion,
-            traumatismo: traumatismo,
-            miodesopsia: miodesopsia,
-            anillos: anillos,
-            hipersensibilidad: hipersensibilidad,
-            sphod: editar.sphodcliente.value,
-            cilod: editar.cilodcliente.value,
-            ejeod: editar.ejeodcliente.value,
-            addod: editar.addodcliente.value,
-            diamod: editar.diamodcliente.value,
-            alturaod: editar.alturaodcliente.value,
-            xeratometriaod: editar.xeratometriaodcliente.value,
-            sphoi: editar.sphoicliente.value,
-            ciloi: editar.ciloicliente.value,
-            ejeoi: editar.ejeoicliente.value,
-            addoi: editar.addoicliente.value,
-            carnosidad: editar.carnosidad.value,
-            diamoi: editar.diamoicliente.value,
-            alturaoi: editar.alturaoicliente.value,
-            xeratometriaoi: editar.xeratometriaoicliente.value,
-            avscod: editar.avscodcliente.value,
-            avscoi: editar.avscoicliente.value,
-            avceod: editar.avceodcliente.value,
-            avceoi: editar.avceoicliente.value,
-            proximacita: editar.proximacitacliente.value,
-            nota: editar.notacliente.value,
-            ultimacita: editar.ultimacitacliente.value,
-        })
-        .then(function() {
-            console.log("Document successfully written!");
-            editar.reset()
-            $("#clienteactualizado").show(200);
-            $("#clienteactualizado").hide(5500);
-            $('.edit').modal('hide')
-                 $('.edit').on('hidden.bs.modal', function() {
-                     if (editarcerrado == true) {
-                     modal(previd);
-                     editarcerrado = false;
-                     }
-                 })
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-            $("#actualizarerror").show(200);
-            $("#actualizarerror").hide(5500);
-        });
-})
-
-
-receta.addEventListener('submit', (e) => {
-    e.preventDefault();
-var fecha = new Date();
-id = fecha.toDateString()
-
-    db.collection('clientes').doc(previd).collection('recetas').add({
-            sphod: receta.sphodreceta.value,
-            cilod: receta.cilodreceta.value,
-            ejeod: receta.ejeodreceta.value,
-            addod: receta.addodreceta.value,
-            diamod: receta.diamodreceta.value,
-            alturaod: receta.alturaodreceta.value,
-            xeratometriaod: receta.xeratometriaodreceta.value,
-            sphoi: receta.sphoireceta.value,
-            ciloi: receta.ciloireceta.value,
-            ejeoi: receta.ejeoireceta.value,
-            addoi: receta.addoireceta.value,
-            diamoi: receta.diamoireceta.value,
-            alturaoi: receta.alturaoireceta.value,
-            xeratometriaoi: receta.xeratometriaoireceta.value,
-            avscod: receta.avscodreceta.value,
-            avscoi: receta.avscoireceta.value,
-            avceod: receta.avceodreceta.value,
-            avceoi: receta.avceoireceta.value,
-            nota: receta.notareceta.value,
-            fecha: receta.fechareceta.value
-        })
-        .then(function() {
-            console.log("Document successfully written!");
-            receta.reset()
-            $("#clienteactualizado").show(200);
-            $("#clienteactualizado").hide(5500);
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-            $("#actualizarerror").show(200);
-            $("#actualizarerror").hide(5500);
-        });
-});
+function crearcalendario () {
+    loadingcal = false;
+      var fecha = new Date()
+
+     //===== Full Calendar =====//
+     if ($.isFunction($.fn.fullCalendar)) {
+         $('#calendar').fullCalendar({
+         locale: 'es',
+             header: {
+                 left: 'prev',
+                 center: 'title',
+                 right: 'next'
+             },
+             height: 530,
+             displayEventTime: false,
+             defaultDate: fecha.toLocaleDateString(),
+             editable: true,
+             eventLimit: false,
+             eventClick: function(info) {
+                 modal(info.id);
+             },
+             events: eventos
+         });
+     }
+     
+     moment().format('MM-DD-YYYY')
+};
 
 function nuevacita(){
     $('.nuevacita').modal('show');
@@ -739,6 +391,34 @@ formanuevacita.addEventListener('submit', (e) => {
 
 
 
+function createtable(doc) {
+    let tr = document.createElement('tr');
+    var folio = document.createElement('th');
+    var cita = document.createElement('td');
+    var nombre = document.createElement('td');
+    var telefono = document.createElement('td');
+    var email = document.createElement('td');
+    var ver = document.createElement('td');
+    var trimmed = doc.id.substring(0, 4);
+
+    tr.setAttribute('id', doc.id);
+
+    folio.textContent = trimmed;
+    cita.textContent = doc.data().ultimacita;
+    nombre.textContent = doc.data().nombre;
+    telefono.textContent = doc.data().telefono;
+    email.textContent = doc.data().correo;
+    ver.innerHTML = '<button type="button" onClick="rendercliente(this.id)" id="' + doc.id + '"class="btn btn-primary btn-sm" data-toggle="modal" data-target=".cliente">Ver</button>'
+
+    tabla.appendChild(tr);
+    tr.appendChild(folio);
+    tr.appendChild(cita);
+    tr.appendChild(nombre);
+    tr.appendChild(telefono);
+    tr.appendChild(email);
+    tr.appendChild(ver);
+
+}
 
 function createreceta(doc) {
     let table = document.createElement('table');
@@ -757,8 +437,8 @@ function createreceta(doc) {
 
     let colborrar = document.createElement('div')
     colborrar.setAttribute('class','col-md-2 offset-md-6')
-    
-    
+
+
     let coleditar = document.createElement('div')
     coleditar.setAttribute('class','col-md-2')
 
@@ -896,7 +576,7 @@ function createreceta(doc) {
     let parameter = "imprimirreceta('#"+doc.id+"')"
 
     let parameterborrar = "borrarreceta('"+doc.id+"')"
-    
+
     let parametereditar = "editarreceta('"+doc.id+"')"
 
     rowbotones.setAttribute('style','margin-bottom:32px')
@@ -910,7 +590,7 @@ function createreceta(doc) {
     borrar.setAttribute('onClick',parameterborrar)
     borrar.setAttribute('class','btn btn-danger btn-sm')
     borrar.innerText="Borrar"
-    
+
     editar.setAttribute('type','button')
     editar.setAttribute('onClick',parametereditar)
     editar.setAttribute('class','btn btn-success btn-sm')
@@ -975,56 +655,55 @@ function createreceta(doc) {
     recetasloading = true;
 }
 
-
 var editareceta = false;
 var recetaid = null;
 
 function editarreceta (id){
     recetaid = id;
     console.log(recetaid)
-    
+
     db.collection('clientes').doc(previd).collection("recetas").doc(id).get().then(function(doc) {
     if (doc.exists) {
         console.log("Document data:", doc.data());
         $$.single("#sphodeditreceta").setAttribute("value", doc.data().sphod )
-    
+
         $$.single("#cilodeditreceta").setAttribute("value", doc.data().cilod )
-    
+
         $$.single("#ejeodeditreceta").setAttribute("value", doc.data().ejeod)
-    
+
         $$.single("#addodeditreceta").setAttribute("value", doc.data().addod)
-    
+
         $$.single("#diamodeditreceta").setAttribute("value", doc.data().diamod)
-    
+
         $$.single("#alturaodeditreceta").setAttribute("value", doc.data().alturaod)
-    
+
         $$.single("#xeratometriaodeditreceta").setAttribute("value", doc.data().xeratometriaod)
-    
-    
+
+
         $$.single("#sphoieditreceta").setAttribute("value", doc.data().sphoi)
-    
+
         $$.single("#ciloieditreceta").setAttribute("value", doc.data().ciloi)
-    
+
         $$.single("#ejeoieditreceta").setAttribute("value", doc.data().ejeoi)
-    
+
         $$.single("#addoieditreceta").setAttribute("value", doc.data().addoi)
-    
+
         $$.single("#diamoieditreceta").setAttribute("value", doc.data().diamoi)
-    
+
         $$.single("#alturaoieditreceta").setAttribute("value", doc.data().alturaoi)
-    
+
         $$.single("#xeratometriaoieditreceta").setAttribute("value", doc.data().xeratometriaoi)
-    
+
         $$.single("#avscodeditreceta").setAttribute("value", doc.data().avscod)
-    
+
         $$.single("#avscoieditreceta").setAttribute("value", doc.data().avscoi)
-    
+
         $$.single("#avceodeditreceta").setAttribute("value", doc.data().avceod)
-    
+
         $$.single("#avceoieditreceta").setAttribute("value", doc.data().avceoi)
-    
+
         $$.single("#datepickereditreceta").setAttribute("value", doc.data().fecha)
-    
+
         $$.single("#notaeditreceta").innerText = doc.data().nota
     } else {
         // doc.data() will be undefined in this case
@@ -1034,9 +713,9 @@ function editarreceta (id){
     console.log("Error getting document:", error);
 });
 
-    
+
     editareceta = true;
-        
+
          $('.cliente').modal('hide')
              $('.cliente').on('hidden.bs.modal', function() {
                  if (editareceta == true) {
@@ -1077,7 +756,7 @@ editformreceta.addEventListener('submit', (e) => {
             $('.editreceta').modal('hide')
                  $('.editreceta').on('hidden.bs.modal', function() {
                      if (editareceta == true) {
-                     modal(previd);
+                     rendercliente(previd);
                      editareceta = false;
                      }
                  })
@@ -1088,7 +767,6 @@ editformreceta.addEventListener('submit', (e) => {
             $("#actualizarerror").hide(5500);
         });
 })
-
 
 
 forma.addEventListener('submit', (e) => {
@@ -1111,7 +789,7 @@ forma.addEventListener('submit', (e) => {
     var anillos;
     var hipersensibilidad;
     var carnosidad;
-
+    var cirugia;
 
     if (forma.diabetes.checked) {
         diabetes = forma.diabetes.value
@@ -1119,16 +797,16 @@ forma.addEventListener('submit', (e) => {
         diabetes = "Diabetes:";
     }
 
+    if (forma.cirugia.checked) {
+        cirugia = forma.cirugia.value
+    } else {
+        cirugia = "Cirugia:";
+    }
+
     if (forma.hipertension.checked) {
         hipertension = forma.hipertension.value
     } else {
         hipertension = "Hipertensión:";
-    }
-    
-    if (forma.carnosidad.checked) {
-        carnosidad = forma.carnosidad.value
-    } else {
-        carnosidad = "Carnosidad:";
     }
 
     if (forma.sinusitis.checked) {
@@ -1165,6 +843,12 @@ forma.addEventListener('submit', (e) => {
         ceguera = forma.ceguera.value
     } else {
         ceguera = "Ceguera:";
+    }
+
+    if (forma.carnosidad.checked) {
+        carnosidad = forma.carnosidad.value
+    } else {
+        carnosidad = "Carnosidad:";
     }
 
     if (forma.dolorojos.checked) {
@@ -1215,6 +899,24 @@ forma.addEventListener('submit', (e) => {
         hipersensibilidad = "Hipersensibilidad Solar:";
     }
 
+    var archivo = document.getElementById("archivo").files;
+
+    var archivos = {}
+
+    if(archivo.length > 0) {
+        for (x = 0; x < archivo.length; ++x) {
+            var thisRef = storageRef.child("archivos/"+ forma.correo.value + "/" + archivo[x].name);
+
+            thisRef.put(archivo[x]).then(function(snapshot) {
+                console.log('Uploaded a blob or file!');
+            });
+            
+            archivos[x] = archivo[x].name
+        }
+    }
+    
+    console.log(archivos)
+
     db.collection('clientes').add({
             nombre: forma.nombre.value,
             telefono: forma.telefono.value,
@@ -1225,6 +927,10 @@ forma.addEventListener('submit', (e) => {
             direccion: forma.direccion.value,
             sexo: forma.sexo.value,
             diabetes: diabetes,
+            cirugia: cirugia,
+            alergiamedicamento: forma.alergiamedicamento.value,
+            medicamentos: forma.medicamentos.value,
+            otraenfermedad: forma.otraenfermedad.value,
             hipertension: hipertension,
             sinusitis: sinusitis,
             dolordecabeza: dolordecabeza,
@@ -1238,9 +944,9 @@ forma.addEventListener('submit', (e) => {
             comezon: comezon,
             secresion: secresion,
             traumatismo: traumatismo,
-            carnosidad: carnosidad,
             miodesopsia: miodesopsia,
             anillos: anillos,
+            carnosidad: carnosidad,
             hipersensibilidad: hipersensibilidad,
             sphod: forma.sphod.value,
             cilod: forma.cilod.value,
@@ -1263,7 +969,8 @@ forma.addEventListener('submit', (e) => {
             avceoi: forma.avceoi.value,
             nota: forma.nota.value,
             ultimacita: forma.ultimacita.value,
-            fecha: forma.ultimacita.value
+            fecha: forma.ultimacita.value,
+            archivos: archivos
         })
         .then(function() {
             console.log("Document successfully written!");
@@ -1278,72 +985,611 @@ forma.addEventListener('submit', (e) => {
         });
 })
 
-var cliente = {};
+var cerrado = false;
+
+function cerrar() {
+    cerrado = true
+    $('.cliente').modal('hide')
+        $('.cliente').on('hidden.bs.modal', function() {
+            if (cerrado == true) {
+            $('.edit').modal('show')
+            cerrado = false;
+            }
+        })
 
 
-var loadingevento = true;
-var previd=null;
+    $$.single("#nombrecliente").setAttribute("value", cliente.nombre)
+    $$.single("#telefonocliente").setAttribute("value", cliente.telefono)
+    $$.single("#correocliente").setAttribute("value", cliente.correo)
+    $$.single("#direccioncliente").setAttribute("value", cliente.direccion)
+    $$.single("#ocupacioncliente").setAttribute("value", cliente.ocupacion)
+    $$.single("#edadcliente").setAttribute("value", cliente.edad)
+    $$.single("#medicamentoscliente").setAttribute("value", cliente.medicamentos.replace("Medicamentos que toma: ", ""))
+    $$.single("#alergiamedicamentocliente").setAttribute("value", cliente.alergiamedicamento.replace("Alergia por los medicamentos: ", ""))
+    $$.single("#otraenfermedadcliente").setAttribute("value", cliente.otraenfermedad.replace("Otras Enfermedades: ", ""))
+    $$.single("#ultimacitaclientepicker").setAttribute("value", cliente.ultimacita)
+    if (cliente.sexo == "Masculino") {
+        $('#masculinocliente').prop('checked', true);
+        $('#femeninocliente').prop('checked', false);
+    } else {
+        $('#femeninocliente').prop('checked', true);
+        $('#masculinocliente').prop('checked', false);
+    }
 
-function crearcalendario () {
-    loadingcal = false;
-      var fecha = new Date()
+    if (cliente.diabetes == "Diabetes: <i class='fa fa-check'></i>") {
+        $('#diabetescliente').prop('checked', true);
+    } else {
+        $('#diabetescliente').prop('checked', false);
+    }
 
-     //===== Full Calendar =====//
-     if ($.isFunction($.fn.fullCalendar)) {
-         $('#calendar').fullCalendar({
-         locale: 'es',
-             header: {
-                 left: 'prev',
-                 center: 'title',
-                 right: 'next'
-             },
-             height: 530,
-             displayEventTime: false,
-             defaultDate: fecha.toLocaleDateString(),
-             editable: true,
-             eventLimit: false,
-             eventClick: function(info) {
-                 modal(info.id);
-             },
-             events: eventos
-         });
-     }
-     
-     moment().format('MM-DD-YYYY')
-};
+    if (cliente.cirugia == "Cirugia: <i class='fa fa-check'></i>") {
+        $('#cirugiacliente').prop('checked', true);
+    } else {
+        $('#cirugiacliente').prop('checked', false);
+    }
 
-function sendmail() {
+    if (cliente.hipertension == "Hipertensión: <i class='fa fa-check'></i>") {
+        $('#hipertensioncliente').prop('checked', true);
+    } else {
+        $('#hipertensioncliente').prop('checked', false);
+    }
 
-    if (cliente.correo != ''){
+    if (cliente.sinusitis == "Sinusitis: <i class='fa fa-check'></i>") {
+        $('#sinusitiscliente').prop('checked', true);
+    } else {
+        $('#sinusitiscliente').prop('checked', false);
+    }
+
+    if (cliente.carnosidad == "Carnosidad: <i class='fa fa-check'></i>") {
+        $('#carnosidadcliente').prop('checked', true);
+    } else {
+        $('#carnosidadcliente').prop('checked', false);
+    }
+
+    if (cliente.dolordecabeza == "Dolor de Cabeza: <i class='fa fa-check'></i>") {
+        $('#dolordecabezacliente').prop('checked', true);
+    } else {
+        $('#dolordecabezacliente').prop('checked', false);
+    }
+
+    if (cliente.alergias == "Alergias: <i class='fa fa-check'></i>") {
+        $('#alergiascliente').prop('checked', true);
+    } else {
+        $('#alergiascliente').prop('checked', false);
+    }
+
+    if (cliente.cataratas == "Cataratas: <i class='fa fa-check'></i>") {
+        $('#cataratascliente').prop('checked', true);
+    } else {
+        $('#cataratascliente').prop('checked', false);
+    }
+
+    if (cliente.glaucoma == "Glaucoma: <i class='fa fa-check'></i>") {
+        $('#glaucomacliente').prop('checked', true);
+    } else {
+        $('#glaucomacliente').prop('checked', false);
+    }
+
+    if (cliente.ceguera == "Ceguera: <i class='fa fa-check'></i>") {
+        $('#cegueracliente').prop('checked', true);
+    } else {
+        $('#cegueracliente').prop('checked', false);
+    }
+
+
+    $$.single("#otrocliente").setAttribute("value", cliente.otro)
+
+    if (cliente.dolorojos == "Dolor de Ojos: <i class='fa fa-check'></i>") {
+        $('#dolorojoscliente').prop('checked', true);
+    } else {
+        $('#dolorojoscliente').prop('checked', false);
+    }
+
+    if (cliente.ojosllorosos == "Ojos Llorosos: <i class='fa fa-check'></i>") {
+        $('#ojosllorososcliente').prop('checked', true);
+    } else {
+        $('#ojosllorososcliente').prop('checked', false);
+    }
+
+    if (cliente.comezon == "Comezón: <i class='fa fa-check'></i>") {
+        $('#comezoncliente').prop('checked', true);
+    } else {
+        $('#comezoncliente').prop('checked', false);
+    }
+
+    if (cliente.secresion == "Secresión: <i class='fa fa-check'></i>") {
+        $('#secresioncliente').prop('checked', true);
+    } else {
+        $('#secresioncliente').prop('checked', false);
+    }
+
+    if (cliente.traumatismo == "Traumatismo: <i class='fa fa-check'></i>") {
+        $('#traumatismocliente').prop('checked', true);
+    } else {
+        $('#traumatismocliente').prop('checked', false);
+    }
+
+    if (cliente.miodesopsia == "Miodesopsia: <i class='fa fa-check'></i>") {
+        $('#miodesopsiacliente').prop('checked', true);
+    } else {
+        $('#miodesopsiacliente').prop('checked', false);
+    }
+
+    if (cliente.anillos == "Anillos o Halos: <i class='fa fa-check'></i>") {
+        $('#anilloscliente').prop('checked', true);
+    } else {
+        $('#anilloscliente').prop('checked', false);
+    }
+
+    if (cliente.hipersensibilidad == "Hipersensibilidad Solar: <i class='fa fa-check'></i>") {
+        $('#hipersensibilidadcliente').prop('checked', true);
+    } else {
+        $('#hipersensibilidadcliente').prop('checked', false);
+    }
+
+    $$.single("#sphodcliente").setAttribute("value", cliente.sphod)
+
+    $$.single("#cilodcliente").setAttribute("value", cliente.cilod)
+
+    $$.single("#ejeodcliente").setAttribute("value", cliente.ejeod)
+
+    $$.single("#addodcliente").setAttribute("value", cliente.addod)
+
+    $$.single("#diamodcliente").setAttribute("value", cliente.diamod)
+
+    $$.single("#alturaodcliente").setAttribute("value", cliente.alturaod)
+
+    $$.single("#xeratometriaodcliente").setAttribute("value", cliente.xeratometriaod)
+
+
+    $$.single("#sphoicliente").setAttribute("value", cliente.sphoi)
+
+    $$.single("#ciloicliente").setAttribute("value", cliente.ciloi)
+
+    $$.single("#ejeoicliente").setAttribute("value", cliente.ejeoi)
+
+    $$.single("#addoicliente").setAttribute("value", cliente.addoi)
+
+    $$.single("#diamoicliente").setAttribute("value", cliente.diamoi)
+
+    $$.single("#alturaoicliente").setAttribute("value", cliente.alturaoi)
+
+    $$.single("#xeratometriaoicliente").setAttribute("value", cliente.xeratometriaoi)
+
+    $$.single("#avscodcliente").setAttribute("value", cliente.avscod)
+
+    $$.single("#avscoicliente").setAttribute("value", cliente.avscoi)
+
+    $$.single("#avceodcliente").setAttribute("value", cliente.avceod)
+
+    $$.single("#avceoicliente").setAttribute("value", cliente.avceoi)
+
+    $$.single("#datepickercliente").setAttribute("value", cliente.proximacita)
+
+    $$.single("#notacliente").innerText = cliente.nota
+
+
+}
+
+var editarcerrado = false;
+
+editar.addEventListener('submit', (e) => {
+    e.preventDefault();
+    editarcerrado = true;
+    var diabetes;
+    var hipertension;
+    var sinusitis;
+    var dolordecabeza;
+    var alergias;
+    var cataratas;
+    var glaucoma;
+    var ceguera;
+    var dolorojos;
+    var ojosllorosos;
+    var comezon;
+    var secresion;
+    var traumatismo;
+    var miodesopsia;
+    var anillos;
+    var hipersensibilidad;
+    var carnosidad;
+    var cirugia;
+
+    var fechanueva = new Date();
+
+    if (cliente.fecha == fechanueva.toDateString()) {
+        fechanueva = cliente.fecha
+    }
+
+    if (editar.diabetescliente.checked) {
+        diabetes = editar.diabetescliente.value
+    } else {
+        diabetes = "Diabetes:";
+    }
+
+    if (editar.cirugiacliente.checked) {
+        cirugia = editar.cirugiacliente.value
+    } else {
+        cirugia = "Cirugia:";
+    }
+
+    if (editar.hipertensioncliente.checked) {
+        hipertension = editar.hipertensioncliente.value
+    } else {
+        hipertension = "Hipertensión:";
+    }
+
+    if (editar.carnosidadcliente.checked) {
+        carnosidad = editar.carnosidadcliente.value
+    } else {
+        carnosidad = "Carnosidad:";
+    }
+
+    if (editar.sinusitiscliente.checked) {
+        sinusitis = editar.sinusitiscliente.value
+    } else {
+        sinusitis = "Sinusitis:";
+    }
+
+    if (editar.dolordecabezacliente.checked) {
+        dolordecabeza = editar.dolordecabezacliente.value
+    } else {
+        dolordecabeza = "Dolor de Cabeza:";
+    }
+
+    if (editar.alergiascliente.checked) {
+        alergias = editar.alergiascliente.value
+    } else {
+        alergias = "Alergias:";
+    }
+
+    if (editar.cataratascliente.checked) {
+        cataratas = editar.cataratascliente.value
+    } else {
+        cataratas = "Cataratas:";
+    }
+
+    if (editar.glaucomacliente.checked) {
+        glaucoma = editar.glaucomacliente.value
+    } else {
+        glaucoma = "Glaucoma:";
+    }
+
+    if (editar.cegueracliente.checked) {
+        ceguera = editar.cegueracliente.value
+    } else {
+        ceguera = "Ceguera:";
+    }
+
+
+    if (editar.dolorojoscliente.checked) {
+        dolorojos = editar.dolorojoscliente.value
+    } else {
+        dolorojos = "Dolor de Ojos:";
+    }
+
+    if (editar.ojosllorososcliente.checked) {
+        ojosllorosos = editar.ojosllorososcliente.value
+    } else {
+        ojosllorosos = "Ojos Llorosos:";
+    }
+
+    if (editar.comezoncliente.checked) {
+        comezon = editar.comezoncliente.value
+    } else {
+        comezon = "Comezón:";
+    }
+
+    if (editar.secresioncliente.checked) {
+        secresion = editar.secresioncliente.value
+    } else {
+        secresion = "Secresión:";
+    }
+
+    if (editar.traumatismocliente.checked) {
+        traumatismo = editar.traumatismocliente.value
+    } else {
+        traumatismo = "Traumatismo:";
+    }
+
+    if (editar.miodesopsiacliente.checked) {
+        miodesopsia = editar.miodesopsiacliente.value
+    } else {
+        miodesopsia = "Miodesopsia:";
+    }
+
+    if (editar.anilloscliente.checked) {
+        anillos = editar.anilloscliente.value
+    } else {
+        anillos = "Anillos o Halos:";
+    }
+
+    if (editar.hipersensibilidadcliente.checked) {
+        hipersensibilidad = editar.hipersensibilidadcliente.value
+    } else {
+        hipersensibilidad = "Hipersensibilidad Solar:";
+    }
+    
+    var archivo = document.getElementById("archivocliente").files;
+
+        
+    var archivos = {}
+
+    if(archivo.length > 0) {
+        for (x = 0; x < archivo.length; ++x) {
+            var thisRef = storageRef.child("archivos/"+ cliente.correo + "/" + archivo[x].name);
+
+            thisRef.put(archivo[x]).then(function(snapshot) {
+                console.log('Uploaded a blob or file!');
+            });
+            
+            cliente.archivos[cliente.archivos.length] = archivo[x].name
+        }
+    }
+    
+    console.log(cliente.archivos)
+
+    db.collection('clientes').doc(previd).update({
+            nombre: editar.nombrecliente.value,
+            telefono: editar.telefonocliente.value,
+            correo: editar.correocliente.value,
+            edad: editar.edadcliente.value,
+            ocupacion: editar.ocupacioncliente.value,
+            direccion: editar.direccioncliente.value,
+            sexo: editar.sexocliente.value,
+            diabetes: diabetes,
+            hipertension: hipertension,
+            sinusitis: sinusitis,
+            dolordecabeza: dolordecabeza,
+            alergias: alergias,
+            cataratas: cataratas,
+            cirugia: cirugia,
+            medicamentos: editar.medicamentoscliente.value,
+            otraenfermedad: editar.otraenfermedadcliente.value,
+            alergiamedicamento: editar.alergiamedicamentocliente.value,
+            glaucoma: glaucoma,
+            ceguera: ceguera,
+            carnosidad: carnosidad,
+            otro: editar.otrocliente.value,
+            dolorojos: dolorojos,
+            ojosllorosos: ojosllorosos,
+            comezon: comezon,
+            secresion: secresion,
+            traumatismo: traumatismo,
+            miodesopsia: miodesopsia,
+            anillos: anillos,
+            hipersensibilidad: hipersensibilidad,
+            sphod: editar.sphodcliente.value,
+            cilod: editar.cilodcliente.value,
+            ejeod: editar.ejeodcliente.value,
+            addod: editar.addodcliente.value,
+            diamod: editar.diamodcliente.value,
+            alturaod: editar.alturaodcliente.value,
+            xeratometriaod: editar.xeratometriaodcliente.value,
+            sphoi: editar.sphoicliente.value,
+            ciloi: editar.ciloicliente.value,
+            ejeoi: editar.ejeoicliente.value,
+            addoi: editar.addoicliente.value,
+            diamoi: editar.diamoicliente.value,
+            alturaoi: editar.alturaoicliente.value,
+            xeratometriaoi: editar.xeratometriaoicliente.value,
+            avscod: editar.avscodcliente.value,
+            avscoi: editar.avscoicliente.value,
+            avceod: editar.avceodcliente.value,
+            avceoi: editar.avceoicliente.value,
+            proximacita: editar.proximacitacliente.value,
+            nota: editar.notacliente.value,
+            ultimacita: editar.ultimacitacliente.value,
+            archivos: cliente.archivos
+        })
+        .then(function() {
+            console.log("Document successfully written!");
+            editar.reset()
+            $("#clienteactualizado").show(200);
+            $("#clienteactualizado").hide(5500);
+            $('.edit').modal('hide')
+                 $('.edit').on('hidden.bs.modal', function() {
+                     if (editarcerrado == true) {
+                     rendercliente(previd);
+                     editarcerrado = false;
+                     }
+                 })
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+            $("#actualizarerror").show(200);
+            $("#actualizarerror").hide(5500);
+        });
+})
+
+receta.addEventListener('submit', (e) => {
+    e.preventDefault();
+var fecha = new Date();
+id = fecha.toDateString()
+    db.collection('clientes').doc(previd).collection('recetas').add({
+            sphod: receta.sphodreceta.value,
+            cilod: receta.cilodreceta.value,
+            ejeod: receta.ejeodreceta.value,
+            addod: receta.addodreceta.value,
+            diamod: receta.diamodreceta.value,
+            alturaod: receta.alturaodreceta.value,
+            xeratometriaod: receta.xeratometriaodreceta.value,
+            sphoi: receta.sphoireceta.value,
+            ciloi: receta.ciloireceta.value,
+            ejeoi: receta.ejeoireceta.value,
+            addoi: receta.addoireceta.value,
+            diamoi: receta.diamoireceta.value,
+            alturaoi: receta.alturaoireceta.value,
+            xeratometriaoi: receta.xeratometriaoireceta.value,
+            avscod: receta.avscodreceta.value,
+            avscoi: receta.avscoireceta.value,
+            avceod: receta.avceodreceta.value,
+            avceoi: receta.avceoireceta.value,
+            nota: receta.notareceta.value,
+            fecha: receta.fechareceta.value
+        })
+        .then(function() {
+            console.log("Document successfully written!");
+            receta.reset()
+            $("#clienteactualizado").show(200);
+            $("#clienteactualizado").hide(5500);
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+            $("#actualizarerror").show(200);
+            $("#actualizarerror").hide(5500);
+        });
+});
+
+
+function rendercliente(id) {
+    previd = id;
+    var docRef = db.collection("clientes").doc(id);
+    while (recetas.firstChild) {
+        recetas.removeChild(recetas.firstChild);
+    }
+
+
+    docRef.get().then(function(doc) {
+        if (doc.exists) {
+            cliente = {
+                nombre: doc.data().nombre,
+                correo: doc.data().correo,
+                sexo: doc.data().sexo,
+                telefono: doc.data().telefono,
+                edad: doc.data().edad,
+                ocupacion: doc.data().ocupacion,
+                direccion: doc.data().direccion,
+                diabetes: doc.data().diabetes,
+                hipertension: doc.data().hipertension,
+                sinusitis: doc.data().sinusitis,
+                dolordecabeza: doc.data().dolordecabeza,
+                alergias: doc.data().alergias,
+                cataratas: doc.data().cataratas,
+                glaucoma: doc.data().glaucoma,
+                ceguera: doc.data().ceguera,
+                otro: doc.data().otro,
+                cirugia: doc.data().cirugia,
+                medicamentos: "Medicamentos que toma: " + doc.data().medicamentos,
+                alergiamedicamento: "Alergia por los medicamentos: " + doc.data().alergiamedicamento,
+                otraenfermedad: "Otras Enfermedades: " + doc.data().otraenfermedad,
+                dolorojos: doc.data().dolorojos,
+                ojosllorosos: doc.data().ojosllorosos,
+                comezon: doc.data().comezon,
+                secresion: doc.data().secresion,
+                traumatismo: doc.data().traumatismo,
+                miodesopsia: doc.data().miodesopsia,
+                anillos: doc.data().anillos,
+                hipersensibilidad: doc.data().hipersensibilidad,
+                sphod: doc.data().sphod,
+                sphoi: doc.data().sphoi,
+                cilod: doc.data().cilod,
+                ciloi: doc.data().ciloi,
+                ejeod: doc.data().ejeod,
+                ejeoi: doc.data().ejeoi,
+                addod: doc.data().addod,
+                carnosidad: doc.data().carnosidad,
+                addoi: doc.data().addoi,
+                diamod: doc.data().diamod,
+                diamoi: doc.data().diamoi,
+                alturaod: doc.data().alturaod,
+                alturaoi: doc.data().alturaoi,
+                xeratometriaoi: doc.data().xeratometriaoi,
+                xeratometriaod: doc.data().xeratometriaod,
+                proximacita: doc.data().proximacita,
+                avscod: doc.data().avscod,
+                avscoi: doc.data().avscoi,
+                avceod: doc.data().avceod,
+                avceoi: doc.data().avceoi,
+                previacita: doc.data().fecha,
+                ultimacita: doc.data().ultimacita,
+                nota: doc.data().nota,
+                ids: "Folio - " + id.substring(0, 4),
+                archivos: doc.data().archivos
+            };
+            if (doc.data().nuevafecha == undefined){
+                cliente.proximacita = doc.data().proximacita
+            } else {
+                cliente.proximacita = doc.data().nuevafecha
+            }
+
+            loadingcliente = false;
+            
+            var ul = document.getElementById("adjuntos");
+            var child = ul.lastElementChild;  
+              while (child) { 
+                  ul.removeChild(child); 
+                  child = ul.lastElementChild; 
+              } 
+            
+            if (cliente.archivos) {
+                for (var object in cliente.archivos) {
+                    storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]).getDownloadURL().then(function(i) {
+                        var newAnchor = document.createElement("a");
+                        var regex = i.match(/%2..*%2F(.*?)\?alt/)
+                        var url = regex[1].replace(/%20/g, " ");
+                        url = url.replace(/%26/g, "&");
+                        newAnchor.textContent = url;
+                        let li = document.createElement('li');
+                        li.setAttribute('class','list-group-item')
+                        li.appendChild(newAnchor);
+                        ul.appendChild(li);
+                        newAnchor.setAttribute('href', i);
+		               }).catch(function(error) {
+			             // Handle any errors
+		               });
+                    }
+            }
+
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+
+
+    db.collection('clientes').doc(id).collection('recetas').onSnapshot(snapshot => {
+        let changes = snapshot.docChanges();
+        changes.forEach(change => {
+            if (change.type == 'added') {
+                createreceta(change.doc);
+            } else if (change.type == 'removed') {
+                let li = recetas.querySelector('[id="' + change.doc.id + '"]');
+                recetas.removeChild(li);
+            }
+        });
+    });
+
+
+}
+
+function borrarcliente() {
+    if (confirm("¿Quieres borrar a este cliente?")) {
+        db.collection('clientes').doc(previd).delete();
+        
+        if (cliente.archivos) {
+            for (var object in cliente.archivos) {
+                var desertRef = storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]);
+                desertRef.delete().then(function() {
+                // File deleted successfully
+                }).catch(function(error) {
+                // Uh-oh, an error occurred!
+                });
+
+            }
+        }
+        
         $("[data-dismiss=modal]").trigger({
             type: "click"
         });
+    }
+}
 
-        smalltalk
-            .prompt('Contactando a ' + cliente.nombre, 'Escribe tu mensaje', '', {
-                buttons: {
-                    ok: 'Enviar',
-                    cancel: 'Cancelar',
-                }
-            })
-            .then((value) => {
-                Email.send({
-                    Host: "mail.opticazeiss.com",
-                    Username: "contacto@opticazeiss.com",
-                    Password: "0pticaZe1ss",
-                    To: cliente.correo,
-                    From: "contacto@opticazeiss.com",
-                    Subject: "Contacto - Optica Zeiss",
-                    Body: value
-                }).then(
-                    message => alert("Correo Enviado")
-                );
-            })
-            .catch(() => {
-                console.log('cancel');
-            });
-    } else {
-        alert("el Cliente no cuenta con correo electrónico")
+function borrarreceta(id) {
+    if (confirm("¿Quieres borrar esta receta?")) {
+        db.collection('clientes').doc(previd).collection('recetas').doc(id).delete();
     }
 }
 
@@ -1384,21 +1630,39 @@ function imprimirreceta(id) {
     $("#pdfguardado").hide(4000);
 }
 
-function borrarcliente() {
-    if (confirm("¿Quieres borrar a este cliente?")) {
-        db.collection('clientes').doc(previd).delete();
-        $("[data-dismiss=modal]").trigger({
-            type: "click"
-        });
+function sendmail() {
+
+    if (cliente.correo != ''){
+    $("[data-dismiss=modal]").trigger({
+        type: "click"
+    });
+        smalltalk
+            .prompt('Contactando a ' + cliente.nombre, 'Escribe tu mensaje', '', {
+                buttons: {
+                    ok: 'Enviar',
+                    cancel: 'Cancelar',
+                }
+            })
+            .then((value) => {
+                Email.send({
+                    Host: "mail.opticazeiss.com",
+                    Username: "contacto@opticazeiss.com",
+                    Password: "0pticaZe1ss",
+                    To: cliente.correo,
+                    From: "contacto@opticazeiss.com",
+                    Subject: "Contacto - Optica Zeiss",
+                    Body: value
+                }).then(
+                    message => alert("Correo Enviado")
+                );
+            })
+            .catch(() => {
+                console.log('cancel');
+            });
+    } else {
+        alert("el Cliente no cuenta con correo electrónico")
     }
 }
-
-function borrarreceta(id) {
-    if (confirm("¿Quieres borrar esta receta?")) {
-        db.collection('clientes').doc(previd).collection('recetas').doc(id).delete();
-    }
-}
-
 
 
 $.extend($.expr[":"], {
@@ -1407,14 +1671,14 @@ return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3
 }
 });
 function buscar(query) {
-    $('#clientesselect li:not(:containsIN("' + query + '"))').hide();
+    $('#tablaclientes tr:not(:containsIN("' + query + '"))').hide();
 }
 
 var searchbar = document.getElementById("search");
 searchbar.onkeyup = function(e) {
     var busqueda = this.value;
     if (e.keyCode == 8) {
-        $('#clientesselect > li').each(function() {
+        $('#tablaclientes > tr').each(function() {
             $(this).show()
         });
         buscar(busqueda);
@@ -1423,7 +1687,7 @@ searchbar.onkeyup = function(e) {
             buscar(busqueda);
         } else {
             console.log("Empty")
-            $('#clientesselect > li').each(function() {
+            $('#tablaclientes > tr').each(function() {
                 $(this).show()
             });
         }
@@ -1435,8 +1699,13 @@ searchbar.onkeyup = function(e) {
 
 // Create a var for Display.JS. You don't have to add the $ var, you can change the name.
 var $$ = new DisplayJS(window);
-$$.ready(function () {
+$$.ready(function() {
     collect()
 })
 // Will render the var once
-$$.var(10);
+
+
+
+
+$$.var(100);
+$$.target()
