@@ -124,10 +124,7 @@
                       <label for="alergias">Alergias</label>
                     </span>
                     <span class="">
-                      <input class="brd-rd5" type="text" name="otraenfermedad" placeholder="Otra Enfermedad" />
-                    </span>
-                    <span class="">
-                      <input class="brd-rd5" type="text" name="alergiamedicamento" placeholder="Alergias por medicamentos" />
+                      <input class="brd-rd5" type="text" name="alergiamedicamento" placeholder="Nombre de medicamentos que generan alergia" />
                     </span>
                     <span class="">
                       <input class="brd-rd5" type="text" name="medicamentos" placeholder="Medicamentos que toma actualmente" />
@@ -135,6 +132,9 @@
                     <span class="chbx">
                       <input type="checkbox" name="cirugia" value="Cirugia: <i class='fa fa-check'></i>" id="cirugia" />
                       <label for="cirugia">Cirugia Previa</label>
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="otraenfermedad" placeholder="Otro" />
                     </span>
                   </div>
                 </div>
@@ -361,19 +361,6 @@
                     <span class="chbx">
                       <input type="checkbox" value="Alergias: <i class='fa fa-check'></i>" name="alergiascliente" id="alergiascliente" />
                       <label for="alergiascliente">Alergias</label>
-                    </span>
-                    <span class="">
-                      <input class="brd-rd5" type="text" name="otraenfermedadcliente" id="otraenfermedadcliente" placeholder="Otra Enfermedad" />
-                    </span>
-                    <span class="">
-                      <input class="brd-rd5" type="text" name="alergiamedicamentocliente" id="alergiamedicamentocliente" placeholder="Alergias por medicamentos" />
-                    </span>
-                    <span class="">
-                      <input class="brd-rd5" type="text" name="medicamentoscliente" id="medicamentoscliente" placeholder="Medicamentos que toma actualmente" />
-                    </span>
-                    <span class="chbx">
-                      <input type="checkbox" name="cirugiacliente" value="Cirugia: <i class='fa fa-check'></i>" id="cirugiacliente" />
-                      <label for="cirugiacliente">Cirugia Previa</label>
                     </span>
                   </div>
                 </div>
@@ -727,10 +714,6 @@
                     <li class="list-group-item" var="cliente.sinusitis" style="text-align:center">43</li>
                     <li class="list-group-item" var="cliente.dolordecabeza" style="text-align:center">43</li>
                     <li class="list-group-item" var="cliente.alergias" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.otraenfermedad" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.cirugia" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.alergiamedicamento" style="text-align:center">43</li>
-                    <li class="list-group-item" var="cliente.medicamentos" style="text-align:center">43</li>
                   </ul>
                 </div>
                 <div class="col col-md-4">
@@ -917,13 +900,16 @@
             </div>
 
             <div class="row" style="text-align:center;" data-html2canvas-ignore="true">
-              <div class="col col-md-4">
+              <div class="col col-md-3">
                 <button type="button" class="btn btn-primary" onClick="imprimir('#impresion')">Imprimir</button>
               </div>
-              <div class="col col-md-4">
+              <div class="col col-md-3">
+                <button type="button" onClick="sendmail()" class="btn btn-success">Contactar</button>
+              </div>
+              <div class="col col-md-3">
                 <button type="button" onClick="borrarcliente()" class="btn btn-danger">Borrar</button>
               </div>
-              <div class="col col-md-4">
+              <div class="col col-md-3">
                 <button type="button" onClick="cerrar()" class="btn btn-info">Editar</button>
               </div>
             </div>

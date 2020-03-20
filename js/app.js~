@@ -666,8 +666,8 @@ function cerrar() {
     $$.single("#direccioncliente").setAttribute("value", cliente.direccion)
     $$.single("#ocupacioncliente").setAttribute("value", cliente.ocupacion)
     $$.single("#edadcliente").setAttribute("value", cliente.edad)
-    $$.single("#medicamentoscliente").setAttribute("value", cliente.medicamentos.replace("Medicamentos que toma:", ""))
-    $$.single("#alergiamedicamentocliente").setAttribute("value", cliente.alergiamedicamento.replace("Medicamentos que provocan alergia: ", ""))
+    $$.single("#medicamentoscliente").setAttribute("value", cliente.medicamentos)
+    $$.single("#alergiamedicamentocliente").setAttribute("value", cliente.alergiamedicamento)
     $$.single("#otraenfermedadcliente").setAttribute("value", cliente.otraenfermedad)
     $$.single("#ultimacitaclientepicker").setAttribute("value", cliente.ultimacita)
     if (cliente.sexo == "Masculino") {
@@ -1112,7 +1112,7 @@ function rendercliente(id) {
                 otro: doc.data().otro,
                 cirugia: doc.data().cirugia,
                 medicamentos: "Medicamentos que toma: " + doc.data().medicamentos,
-                alergiamedicamento: "Alergias por los medicamentos: " + doc.data().alergiamedicamento,
+                alergiamedicamento: "Alergias por medicamentos:" + doc.data().alergiamedicamento,
                 otraenfermedad: doc.data().otraenfermedad,
                 dolorojos: doc.data().dolorojos,
                 ojosllorosos: doc.data().ojosllorosos,
