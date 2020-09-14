@@ -50,8 +50,7 @@
     <div class="nav-head">Menu <span class="menu-trigger"><i class="ion-android-menu"></i></span></div>
     <nav class="custom-scrollbar">
       <ul class="drp-sec">
-        <li><a href="main.html" title=""><i class="ion-android-people"></i> Clientes</a></li>
-        <li><a href="calendar.html" title=""><i class="ion-calendar"></i> Calendario</a></li>
+        <li><a href="index.html" title=""><i class="ion-android-people"></i> Clientes</a></li>
       </ul>
     </nav>
   </header>
@@ -86,6 +85,9 @@
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-12">
                   <input class="brd-rd5" type="text" name="direccion" placeholder="Direccion Completa" />
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="motivo" placeholder="Motivo de Consulta" />
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-12">
                   <div class="gender-box">
@@ -767,8 +769,8 @@
                   </ul>
                 </div>
               </div>
-              
-              
+
+
               <div class="row" style="margin-top:24px;">
                 <div class="col col-md-12">
                   <p>Archivos</p>

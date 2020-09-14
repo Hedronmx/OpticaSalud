@@ -2,55 +2,932 @@
 <html>
 
 <head>
-    <!-- Meta-Information -->
-    <title>Optica Salud Visual</title>
-    <meta charset="utf-8">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Vendor: Bootstrap 4 Stylesheets  -->
-    <link rel="stylesheet" href="css/jquery-ui.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <!-- Our Website CSS Styles -->
-    <link rel="stylesheet" href="css/icons.min.css" type="text/css">
-    <link rel="stylesheet" href="css/main.css" type="text/css">
-    <link rel="stylesheet" href="css/responsive.css" type="text/css">
-    <!-- Color Scheme -->
-    <link rel="stylesheet" href="css/color-schemes/color.css" type="text/css" title="color3">
-    <link rel="alternate stylesheet" href="css/color-schemes/color1.css" title="color1">
-    <link rel="alternate stylesheet" href="css/color-schemes/color2.css" title="color2">
-    <link rel="alternate stylesheet" href="css/color-schemes/color4.css" title="color4">
-    <link rel="alternate stylesheet" href="css/color-schemes/color5.css" title="color5">
+  <!-- Meta-Information -->
+  <title>Optica Salud Visual</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Vendor: Bootstrap 4 Stylesheets  -->
+  <link rel="stylesheet" href="css/jquery-ui.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+  <!-- Our Website CSS Styles -->
+  <link rel="stylesheet" href="css/icons.min.css" type="text/css">
+  <link rel="stylesheet" href="css/main.css" type="text/css">
+  <link rel="stylesheet" href="css/responsive.css" type="text/css">
+  <link rel="stylesheet" href="css/override.css" type="text/css">
+  <!-- Color Scheme -->
+  <link rel="stylesheet" href="css/color-schemes/color.css" type="text/css" title="color3">
+  <link rel="alternate stylesheet" href="css/color-schemes/color1.css" title="color1">
+  <link rel="alternate stylesheet" href="css/color-schemes/color2.css" title="color2">
+  <link rel="alternate stylesheet" href="css/color-schemes/color4.css" title="color4">
+  <link rel="alternate stylesheet" href="css/color-schemes/color5.css" title="color5">
 </head>
 
-<body class="panel-data">
-
-    <!-- Side Header -->
-    <div class="panel-content">
-    <div class="widget">
-        <div class="widget-title2">
-            <h2>Ingrese la contraseña</h2>
-        </div>
-
-        <div class="col col-md-12">
-        <div class="alert sucess alert-success alert-dismissible fade show" role="alert">
-         Bienvenido!
-          <button type="button" class="close" onClick="hide()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="alert error alert-danger alert-dismissible fade show" role="alert">
-         Contraseña incorrecta
-          <button type="button" class="close" onClick="hide()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-            <form class="form-wrp" id="login">
-                <input target="name" id="input" type="password" class="form-group has-error" placeholder="Contraseña">
-                <button type="button" onClick="login()" class="btn btn-primary btn-lg">Ingresar</button>
-            </form>
-        </div>
-
+<body class="panel-data expand-data">
+  <div class="topbar">
+    <div class="logo">
+      <h1><img src="images/logo1.png" alt="" /></h1>
     </div>
+    <div class="topbar-data">
+      <form class="topbar-search" onSubmit="return false;" style="width:80%">
+        <button><i class="ion-ios-search-strong"></i></button>
+        <input type="text" id="search" target="busqueda" placeholder="Busqueda" />
+      </form>
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target=".nuevocliente" style="float:right; padding:8px; margin-right:2%; margin-top:26px;">Nuevo Cliente</button>
+    </div>
+    <div class="topbar-bottom-colors">
+      <i style="background-color: #56b9d3;"></i>
+      <i style="background-color: #56b9d3;"></i>
+      <i style="background-color: #56b9d3;"></i>
+      <i style="background-color: #76b03d;"></i>
+      <i style="background-color: #76b03d;"></i>
+      <i style="background-color: #76b03d;"></i>
+      <i style="background-color: #76b03d;"></i>
+    </div>
+  </div>
+  <!-- Topbar -->
+  <header class="side-header expand-header">
+    <div class="nav-head">Menu <span class="menu-trigger"><i class="ion-android-menu"></i></span></div>
+    <nav class="custom-scrollbar">
+      <ul class="drp-sec">
+        <li><a href="index.html" title=""><i class="ion-android-people"></i> Clientes</a></li>
+      </ul>
+    </nav>
+  </header>
+  <!-- Side Header -->
+  <div class="panel-content">
+
+    <!--Nuevo Cliente -->
+    <div class="modal fade nuevocliente" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding:2%;">
+          <div class="modal-header">
+            <h4 class="modal-title">Nuevo Cliente</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body">
+            <form class="form-wrp" id="nuevocliente">
+              <div class="row mrg20">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="text" name="nombre" placeholder="Nombre Completo" required />
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="phone" name="telefono" placeholder="Telefono" required/>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="text" name="edad" placeholder="Edad" />
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="text" name="ocupacion" placeholder="Ocupación" />
+                </div>
+
+                    <strong>Sexo</strong>
+                    <span class="rdio-bx">
+                      <input type="radio" name="sexo" value="Masculino" id="masculino" />
+                      <label for="masculino">Masculino</label>
+                    </span>
+                    <span class="rdio-bx">
+                      <input type="radio" name="sexo" value="Femenino" id="femenino" />
+                      <label for="femenino">Femenino</label>
+                    </span>
+
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="direccion" placeholder="Direccion Completa" />
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="motivo" placeholder="Motivo de Consulta" />
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="enfermedades" placeholder="Enfermedades" />
+                </div>
+                
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <div class="gender-box">
+                    <span class="chbx">
+                      <input type="checkbox" name="diabetes" value="Diabetes: <i class='fa fa-check'></i>" id="diabetes" />
+                      <label for="diabetes">Diabetes</label>
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="tiempoDiabetes" placeholder="Tiempo" />
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="tratamientoDiabetes" placeholder="Tratamiento" />
+                    </span>
+                  </div>
+                    
+                    <div class="gender-box">
+                      <span class="chbx">
+                        <input type="checkbox" name="hipertension" value="Hipertensión: <i class='fa fa-check'></i>" id="hipertension" />
+                        <label for="hipertension">Hipertensión</label>
+                      </span>
+                      <span class="">
+                      <input class="brd-rd5" type="text" name="tiempoHipertension" placeholder="Tiempo" />
+                    </span>
+                      <span class="">
+                      <input class="brd-rd5" type="text" name="tratamientoHipertension" placeholder="Tratamiento" />
+                    </span>
+                    </div>
+                    
+                    <div class="gender-box">
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="alergias" placeholder="Alergias" />
+                    </span>
+                    
+                    <div class= "gender-box">
+		                  <span class="">
+		                    <input class="brd-rd5" type="text" name="otraenfermedad" placeholder="Otra Enfermedad" />
+		                  </span>
+                  	</div>
+                  	
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <strong>2. Oculares Heredofamiliares</strong>
+                  <div class="gender-box">
+                    <span class="chbx">
+                      <input type="checkbox" name="cataratas" value="Cataratas: <i class='fa fa-check'></i>" id="cataratas" />
+                      <label for="cataratas">Cataratas</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="glaucoma" value="Glaucoma: <i class='fa fa-check'></i>" id="glaucoma" />
+                      <label for="glaucoma">Glaucoma</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="ceguera" value="Ceguera: <i class='fa fa-check'></i>" id="ceguera" />
+                      <label for="ceguera">Ceguera</label>
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="otro" placeholder="Otro" />
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <strong>3. Particulares</strong>
+                  <div class="gender-box">
+                    <span class="chbx">
+                      <input type="checkbox" name="dolorojos" value="Dolor de Ojos: <i class='fa fa-check'></i>" id="dolorojos" />
+                      <label for="dolorojos">Dolor de Ojos</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="ojosllorosos" value="Ojos Llorosos: <i class='fa fa-check'></i>" id="ojosllorosos" />
+                      <label for="ojosllorosos">Ojos Llorosos</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="comezon" value="Comezón: <i class='fa fa-check'></i>" id="comezon" />
+                      <label for="comezon">Comezón</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="secresion" value="Secresión: <i class='fa fa-check'></i>" id="secresion" />
+                      <label for="secresion">Secresión</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="traumatismo" value="Traumatismo: <i class='fa fa-check'></i>" id="traumatismo" />
+                      <label for="traumatismo">Traumatismo</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="miodesopsia" value="Miodesopsia: <i class='fa fa-check'></i>" id="miodesopsia" />
+                      <label for="miodesopsia">Miodesopsia</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="anillos" value="Anillos o Halos: <i class='fa fa-check'></i>" id="anillos" />
+                      <label for="anillos">Anillos o Halos</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="hipersensibilidad" value="Hipersensibilidad Solar: <i class='fa fa-check'></i>" id="hipersensibilidad" />
+                      <label for="hipersensibilidad">Hipersensibilidad Solar</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="carnosidad" value="Carnosidad: <i class='fa fa-check'></i>" id="carnosidad" />
+                      <label for="carnosidad">Carnosidad</label>
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="row">
+                	<div class="col-md-12">
+                		<strong>Evolución</strong>
+                	</div>
+                	<div class="col-md-6">
+                		<span class="">
+                      <input class="brd-rd5" type="text" name="avscod" placeholder="A Vsc OD" />
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="avscoi" placeholder="A Vsc OI" />
+                    </span>
+                	</div>
+                	<div class="col-md-6 col-sm-6 col-lg-6">
+		                		<span class="">
+				                  <input class="brd-rd5" type="text" name="pioOd" placeholder="PIO OD" />
+				                </span>
+		                  </div>
+		                  
+		                  <div class="col-md-6 col-sm-6 col-lg-6">
+		                		<span class="">
+				                  <input class="brd-rd5" type="text" name="pioOi" placeholder="PIO OI" />
+				                </span>
+		                  </div>
+                	<div class="col-md-8">
+                		<strong>Subjetivo</strong>
+                    <textarea id="subjetivo" name="subjetivo" rows="4" cols="50"> </textarea>
+                	</div>
+                	<div class="col-md-2">
+                	<strong>Tx</strong>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="tx" />
+                    </span>
+                	</div>
+                	<div class="col-md-2">
+                	<strong>Hora</strong>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="hora"/>
+                    </span>
+                	</div>
+                	
+                	<div class="col-md-12">
+                    <textarea id="meganota" name="meganota" rows="4" cols="50"> </textarea>
+                	</div>
+                	
+                </div>
+                
+                <div class="row mrg20">
+                  <strong>Fecha</strong>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <input class="brd-rd5" type="text" name="ultimacita" id="ultimacitapicker">
+                  </div>
+                </div>
+                <div class="row mrg20">
+                  <div class="col col-md-12">
+                    <strong>Tipo de lente</strong>
+                    <textarea class="form-control rounded-0" name="tipodelente" placeholder="Escriba aqui" id="nota" rows="10"></textarea>
+                  </div>
+                </div>
+                <div class="row mrg20">
+                  <div class="col col-md-12">
+                    <strong>Adjuntar Archivos</strong>
+                    <input type="file" id="archivo" accept="image/*, application/pdf" multiple>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12 col-lg-12">
+                <button class="green-bg brd-rd5" id="registrar"><i class="fa fa-check"></i>Registrar</button>
+              </div>
+          </div>
+          </form>
+          <div class="alert alert-success" id="clienteregistrado" role="alert">
+            ¡Cliente Registrado!
+          </div>
+          <div class="alert alert-danger" id="alertaerror" role="alert">
+            ¡Error!
+          </div>
+        </div>
+      </div>
+      </div>
+
+
+    <!--Editar Cliente Modal -->
+    <div class="modal fade edit" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding:2%;">
+          <div class="modal-header">
+            <h4 class="modal-title">Actualizar Cliente</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body">
+            <form class="form-wrp" id="editarcliente">
+              <div class="row mrg20">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="text" name="nombrecliente" id="nombrecliente" placeholder="Nombre Completo" required />
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="phone" name="telefonocliente" id="telefonocliente"  placeholder="Telefono" required/>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="text" name="edadcliente" id="edadcliente" placeholder="Edad" />
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <input class="brd-rd5" type="text" name="ocupacioncliente" id="ocupacioncliente" placeholder="Ocupación" />
+                </div>
+
+                    <strong>Sexo</strong>
+                    <span class="rdio-bx">
+                      <input type="radio" name="sexocliente" value="Masculinocliente" id="masculinocliente" />
+                      <label for="masculino">Masculino</label>
+                    </span>
+                    <span class="rdio-bx">
+                      <input type="radio" name="sexocliente" value="Femeninocliente" id="femeninocliente" />
+                      <label for="femenino">Femenino</label>
+                    </span>
+
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="direccioncliente" id="direccioncliente" placeholder="Direccion Completa" />
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="motivocliente" id="motivocliente" placeholder="Motivo de Consulta" />
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <input class="brd-rd5" type="text" name="enfermedadescliente" id="enfermedadescliente" placeholder="Enfermedades" />
+                </div>
+                
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <div class="gender-box">
+                    <span class="chbx">
+                      <input type="checkbox" name="diabetescliente" value="Diabetes: <i class='fa fa-check'></i>" id="diabetescliente" />
+                      <label for="diabetes">Diabetes</label>
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="tiempoDiabetescliente" id="tiempoDiabetescliente" placeholder="Tiempo" />
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="tratamientoDiabetescliente" id="tratamientoDiabetescliente" placeholder="Tratamiento" />
+                    </span>
+                  </div>
+                    
+                    <div class="gender-box">
+                      <span class="chbx">
+                        <input type="checkbox" name="hipertensioncliente" value="Hipertensión: <i class='fa fa-check'></i>" id="hipertensioncliente" />
+                        <label for="hipertension">Hipertensión</label>
+                      </span>
+                      <span class="">
+                      <input class="brd-rd5" type="text" name="tiempoHipertensioncliente" id="tiempoHipertensioncliente" placeholder="Tiempo" />
+                    </span>
+                      <span class="">
+                      <input class="brd-rd5" type="text" name="tratamientoHipertensioncliente" id="tratamientoHipertensioncliente" placeholder="Tratamiento" />
+                    </span>
+                    </div>
+                    
+                    <div class="gender-box">
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="alergiascliente" id="alergiascliente" placeholder="Alergias" />
+                    </span>
+                    
+                    <div class= "gender-box">
+		                  <span class="">
+		                    <input class="brd-rd5" type="text" name="otraenfermedadcliente" id="otraenfermedadcliente" placeholder="Otra Enfermedad" />
+		                  </span>
+                  	</div>
+                  	
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <strong>2. Oculares Heredofamiliares</strong>
+                  <div class="gender-box">
+                    <span class="chbx">
+                      <input type="checkbox" name="cataratascliente" value="Cataratas: <i class='fa fa-check'></i>" id="cataratascliente" />
+                      <label for="cataratas">Cataratas</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="glaucomacliente" value="Glaucoma: <i class='fa fa-check'></i>" id="glaucomacliente" />
+                      <label for="glaucoma">Glaucoma</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="cegueracliente" value="Ceguera: <i class='fa fa-check'></i>" id="cegueracliente" />
+                      <label for="ceguera">Ceguera</label>
+                    </span>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="otrocliente" id="otrocliente" placeholder="Otro" />
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                  <strong>3. Particulares</strong>
+                  <div class="gender-box">
+                    <span class="chbx">
+                      <input type="checkbox" name="dolorojoscliente" value="Dolor de Ojos: <i class='fa fa-check'></i>" id="dolorojoscliente" />
+                      <label for="dolorojos">Dolor de Ojos</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="ojosllorososcliente" value="Ojos Llorosos: <i class='fa fa-check'></i>" id="ojosllorososcliente" />
+                      <label for="ojosllorosos">Ojos Llorosos</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="comezoncliente" value="Comezón: <i class='fa fa-check'></i>" id="comezoncliente" />
+                      <label for="comezon">Comezón</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="secresioncliente" value="Secresión: <i class='fa fa-check'></i>" id="secresioncliente" />
+                      <label for="secresion">Secresión</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="traumatismocliente" value="Traumatismo: <i class='fa fa-check'></i>" id="traumatismocliente" />
+                      <label for="traumatismo">Traumatismo</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="miodesopsiacliente" value="Miodesopsia: <i class='fa fa-check'></i>" id="miodesopsiacliente" />
+                      <label for="miodesopsia">Miodesopsia</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="anilloscliente" value="Anillos o Halos: <i class='fa fa-check'></i>" id="anilloscliente" />
+                      <label for="anillos">Anillos o Halos</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="hipersensibilidadcliente" value="Hipersensibilidad Solar: <i class='fa fa-check'></i>" id="hipersensibilidadcliente" />
+                      <label for="hipersensibilidad">Hipersensibilidad Solar</label>
+                    </span>
+                    <span class="chbx">
+                      <input type="checkbox" name="carnosidadcliente" value="Carnosidad: <i class='fa fa-check'></i>" id="carnosidadcliente" />
+                      <label for="carnosidad">Carnosidad</label>
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="row">
+                	<div class="col-md-12">
+                		<strong>Evolución</strong>
+                	</div>
+                	<div class="col-md-6">
+                		<span class="">
+                      <input class="brd-rd5" type="text" name="avscodcliente" id="avscodcliente"  placeholder="A Vsc OD" />
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="avscoicliente" id="avscoicliente" placeholder="A Vsc OI" />
+                    </span>
+                	</div>
+                	<div class="col-md-6 col-sm-6 col-lg-6">
+		                		<span class="">
+				                  <input class="brd-rd5" type="text" name="pioOdcliente" id="pioOdcliente" placeholder="PIO OD" />
+				                </span>
+		                  </div>
+		                  
+		                  <div class="col-md-6 col-sm-6 col-lg-6">
+		                		<span class="">
+				                  <input class="brd-rd5" type="text" name="pioOicliente" id="pioOicliente" placeholder="PIO OI" />
+				                </span>
+		                  </div>
+                	<div class="col-md-8">
+                		<strong>Subjetivo</strong>
+                    <textarea  name="subjetivocliente" id="subjetivocliente" rows="4" cols="50"> </textarea>
+                	</div>
+                	<div class="col-md-2">
+                	<strong>Tx</strong>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="txcliente" id="txcliente" />
+                    </span>
+                	</div>
+                	<div class="col-md-2">
+                	<strong>Hora</strong>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="horacliente" id="horacliente"/>
+                    </span>
+                	</div>
+                	
+                	<div class="col-md-12">
+                    <textarea name="meganotacliente" id="meganotacliente" rows="4" cols="50"> </textarea>
+                	</div>
+                	
+                </div>
+                
+                <div class="row mrg20">
+                  <strong>Fecha</strong>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <input class="brd-rd5" type="text" name="fechacliente" id="ultimacitaclientepicker">
+                  </div>
+                </div>
+                <div class="row mrg20">
+                  <div class="col col-md-12">
+                    <strong>Tipo de lente</strong>
+                    <textarea class="form-control rounded-0" name="tipodelentecliente" id="tipodelentecliente" rows="10"></textarea>
+                  </div>
+                </div>
+                <div class="row mrg20">
+                  <div class="col col-md-12">
+                    <strong>Adjuntar Archivos</strong>
+                    <input type="file" id="archivocliente" accept="image/*, application/pdf" multiple>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12 col-lg-12">
+                <button class="green-bg brd-rd5" id="actualizarboton"><i class="fa fa-check"></i>Actualizar</button>
+              </div>
+          </div>
+          </form>
+          <div class="alert alert-success" id="clienteactualizado" role="alert">
+            ¡Cliente Actualizado!
+          </div>
+          <div class="alert alert-danger" id="actualizarerror" role="alert">
+            ¡Error!
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+     <!--Editar Receta Modal -->
+     <div class="modal fade editreceta" tabindex="-1" aria-hidden="true">
+       <div class="modal-dialog modal-lg">
+         <div class="modal-content" style="padding:2%;">
+           <div class="modal-header">
+             <h4 class="modal-title">Actualizar Receta</h4>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+           </div>
+           <div class="modal-body">
+
+           <div class="row">
+
+             <form class="form-wrp" id="editformreceta">
+                 <div class="row">
+                   <div class="col-md-12">
+                     <strong>Ojo Derecho</strong>
+                   </div>
+                 </div>
+                 <div class="row mrg20">
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="sphodeditreceta" min="-1000" step="0.001" placeholder="SPH" id="sphodeditreceta" />
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="cilodeditreceta" min="-1000" step="0.001" placeholder="CIL" id="cilodeditreceta" />
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="ejeodeditreceta" min="-1000" step="0.001" placeholder="EJE" id="ejeodeditreceta" />
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="addodeditreceta" min="-1000" step="0.001" placeholder="ADD" id="addodeditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="diamodeditreceta" min="-1000" step="0.001" placeholder="DIAM." id="diamodeditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="xeratometriaodeditreceta" min="-1000" step="0.001" placeholder="QUERATOMETRIA" id="xeratometriaodeditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="avscodeditreceta" min="-1000" step="0.001" placeholder="AVSC" id="avscodeditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="avceodeditreceta" min="-1000" step="0.001" placeholder="AVCE" id="avceodeditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="alturaodeditreceta" min="-1000" step="0.001" placeholder="NOTA" id="alturaodeditreceta" />
+                   </div>
+                 </div>
+                 <div class="row">
+                   <div class="col-md-12">
+                     <strong>Ojo Izquierdo</strong>
+                   </div>
+                 </div>
+                 <div class="row mrg20">
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="sphoieditreceta" min="-1000" step="0.001" placeholder="SPH" id="sphoieditreceta" />
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="ciloieditreceta" min="-1000" step="0.001" placeholder="CIL" id="ciloieditreceta" />
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="ejeoieditreceta" min="-1000" step="0.001" placeholder="EJE" id="ejeoieditreceta" />
+                   </div>
+                   <div class="col-md-3 col-sm-3 col-lg-3">
+                     <input class="brd-rd5" type="text" name="addoieditreceta" min="-1000" step="0.001" placeholder="ADD" id="addoieditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="diamoieditreceta" min="-1000" step="0.001" placeholder="DIAM." id="diamoieditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="xeratometriaoieditreceta" min="-1000" step="0.001" placeholder="QUERATOMETRIA" id="xeratometriaoieditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="avscoieditreceta" min="-1000" step="0.001" placeholder="AVSC" id="avscoieditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="avceoieditreceta" min="-1000" step="0.001" placeholder="AVCE" id="avceoieditreceta" />
+                   </div>
+                   <div class="col-md-4 col-sm-4 col-lg-4">
+                     <input class="brd-rd5" type="text" name="alturaoieditreceta" min="-1000" step="0.001" placeholder="NOTA" id="alturaoieditreceta" />
+                   </div>
+                 </div>
+                 <div class="row mrg20">
+                   <strong>Fecha de Receta</strong>
+                   <div class="col-md-12 col-sm-12 col-lg-12">
+                     <input class="brd-rd5" type="text" name="datepickereditreceta" id="datepickereditreceta">
+                   </div>
+                 </div>
+                 <div class="row mrg20">
+                   <div class="col col-md-12">
+                     <strong>Nota de Receta</strong>
+                     <textarea class="form-control rounded-0" name="notaeditreceta" placeholder="Escriba aqui" id="notaeditreceta" rows="10"></textarea>
+                   </div>
+                 </div>
+               </div>
+               <div class="row">
+                 <div class="offset-md-10 col-md-2">
+                   <button class="btn-success brd-rd5" id="actualizarboton"> <i class="fa fa-check"></i>Actualizar</button>
+                 </div>
+               </div>
+           </div>
+           </form>
+
+           </div>
+
+         </div>
+       </div>
+
+
+    <!--Render Cliente-->
+    <div class="modal fade cliente" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding:2%;">
+          <div class="modal-header">
+            <h4 class="modal-title" var="cliente.ids">Cliente</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="row">
+            <div class="col col-md-12">
+              <div if="loadingcliente" class="loader-inner ball-pulse align-middle">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body" else="loadingcliente">
+            <div id="impresion" style="margin:0px; width:100%; padding:0px">
+              <div class="row">
+                <div class="col col-md-5">
+                  <p>Nombre Completo</p>
+                  <h6 var="cliente.nombre"> </h6>
+                </div>
+                <div class="col col-md-2">
+                  <p>Sexo</p>
+                  <h6 var="cliente.sexo"> </h6>
+                </div>
+                <div class="col col-md-2">
+                  <p>Edad</p>
+                  <h6 var="cliente.edad"> </h6>
+                </div>
+                <div class="col col-md-3">
+                  <p>Teléfono</p>
+                  <h6 var="cliente.telefono"> </h6>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col col-md-7">
+                  <p>Dirección Completa</p>
+                  <h6 var="cliente.direccion"> </h6>
+                </div>
+                <div class="col col-md-5">
+                  <p>Motivo</p>
+                  <h6 var="cliente.motivo"> </h6>
+                </div>
+              </div>
+              <div class="row" style="margin-top:24px">
+              	<div class="col col-md-7">
+                  <p>Enfermedades</p>
+                  <h6 var="cliente.enfermedades"> </h6>
+                </div>
+                <div class="col col-md-5">
+                  <p>Fecha</p>
+                  <h6 var="cliente.fecha"> </h6>
+                </div>
+              </div>
+              <div class="row" style="margin-top:24px;">
+                <div class="col col-md-12">
+                  <p>Generales</p>
+                </div>
+                <div class="col col-md-6">
+                  <h6 var="cliente.diabetes"> </h6>
+                  <strong> Tiempo </strong>
+                  <p var= "cliente.tiempoDiabetes"> </p>
+                  <strong> Tratamiento </strong>
+                  <p var= "cliente.tratamientoDiabetes"> </p>
+                </div>
+                <div class="col col-md-6">
+                  <h6 var="cliente.hipertension"> </h6>
+                  <strong> Tiempo </strong>
+                  <p var= "cliente.tiempoHipertension"> </p>
+                  <strong> Tratamiento </strong>
+                  <p var= "cliente.tratamientoHipertension"> </p>
+                </div>
+                <div class="col col-md-6">
+                  <p>Oculares Heredofamiliares</p>
+                </div>
+                <div class="col col-md-6">
+                  <p>Particulares</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col col-md-6">
+                  <ul class="list-group">
+                    <li class="list-group-item" var="cliente.cataratas" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.glaucoma" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.ceguera" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.otro" style="text-align:center">43</li>
+                  </ul>
+                </div>
+                <div class="col col-md-6">
+                  <ul class="list-group">
+                    <li class="list-group-item" var="cliente.dolorojos" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.ojosllorosos" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.comezon" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.secresion" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.traumatismo" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.miodesopsia" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.anillos" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.hipersensibilidad" style="text-align:center">43</li>
+                    <li class="list-group-item" var="cliente.carnosidad" style="text-align:center">43</li>
+                  </ul>
+                </div>
+              </div>
+
+
+              <div class="row" style="margin-top:24px;">
+                <div class="col col-md-12">
+                  <p>Archivos</p>
+                </div>
+              </div>
+              <div class="row">
+                <ul class="list-group" id="adjuntos">
+                </ul>
+              </div>
+
+              <div class="row" style="margin-top:24px;">
+                <div class="col col-md-12">
+                  <p>Recetas</p>
+                </div>
+              </div>
+              <div class="row" style="margin-left: 0px;margin-right: 0px;">
+                <div class="col col-md-12">
+                  <p var="cliente.fecha">Fecha</p>
+                </div>
+              </div>
+              <div class="row">
+		            <div class="col-md-3">
+		            	<strong> A VSC OD </strong>
+		            	<p var="cliente.avscod"> </p>
+		            </div>
+		            <div class="col-md-3">
+		            	<strong> A VSC OI </strong>
+		            	<p var="cliente.avscoi"> </p>
+		            </div>
+		            <div class="col-md-3">
+		            	<strong> PIO OD </strong>
+		            	<p var="cliente.pioOd"> </p>
+		            </div>
+		            <div class="col-md-3">
+		            	<strong> PIO OI </strong>
+		            	<p var="cliente.pioOi"> </p>
+		            </div>
+		            
+		            <div class="col-md-8">
+		            	<strong> Subjetivo </strong>
+		            	<p var="cliente.subjetivo"> </p>
+		            </div>
+		            <div class="col-md-2">
+		            	<strong> TX </strong>
+		            	<p var="cliente.tx"> </p>
+		            </div>
+		            <div class="col-md-2">
+		            	<strong> Hora </strong>
+		            	<p var="cliente.hora"> </p>
+		            </div>
+		            
+		            
+		            <div class="col-md-12">
+		            	<strong>  </strong>
+		            	<p var="cliente.meganota"> </p>
+		            </div>
+
+              </div>
+
+
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div id="recetas" if="recetasloading" style="margin-top:24px;margin-left: 0px;margin-right: 0px; width:100%">
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="row" data-html2canvas-ignore="true" style="margin-top:16px;">
+              <div class="col-md-12">
+                <form class="form-wrp" id="nuevareceta" style="margin-top:32px">
+                  <p>Nueva Receta </p>
+                  <div class="row">
+                	<div class="col-md-12">
+                		<strong>Evolución</strong>
+                	</div>
+                	<div class="col-md-6">
+                		<span class="">
+                      <input class="brd-rd5" type="text" name="avscodreceta" placeholder="A Vsc OD" />
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="avscoireceta" placeholder="A Vsc OI" />
+                    </span>
+                	</div>
+                	
+                	<div class="col-md-6">
+                		<span class="">
+                      <input class="brd-rd5" type="text" name="pioOdreceta" placeholder="PIO OD" />
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="pioOireceta" placeholder="PIO OI" />
+                    </span>
+                	</div>
+                	
+                	<div class="col-md-8">
+                		<strong>Subjetivo</strong>
+                    <textarea id="subjetivo" name="subjetivoreceta" rows="4" cols="50"> </textarea>
+                	</div>
+                	<div class="col-md-2">
+                	<strong>Tx</strong>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="txreceta" />
+                    </span>
+                	</div>
+                	<div class="col-md-2">
+                	<strong>Hora</strong>
+                    <span class="">
+                      <input class="brd-rd5" type="text" name="horareceta"/>
+                    </span>
+                	</div>
+                	
+                	<div class="col-md-12">
+                    <textarea id="meganota" name="meganotareceta" rows="4" cols="50"> </textarea>
+                	</div>
+                	
+                </div>
+                
+                <div class="row mrg20">
+                  <strong>Fecha</strong>
+                  <div class="col-md-12 col-sm-12 col-lg-12">
+                    <input class="brd-rd5" type="text" name="fechareceta" id="datepickerreceta">
+                  </div>
+                </div>
+                
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
+                      <button class="green-bg brd-rd5" style="margin-bottom:32px"><i class="fa fa-check"></i>Guardar Receta</button>
+                    </div>
+                  </div>
+                  
+
+                </form>
+              </div>
+
+            </div>
+
+            <div class="row" style="text-align:center;" data-html2canvas-ignore="true">
+              <div class="col col-md-4">
+                <button type="button" class="btn btn-primary" onClick="imprimir('#impresion')">Imprimir</button>
+              </div>
+              <div class="col col-md-4">
+                <button type="button" onClick="borrarcliente()" class="btn btn-danger">Borrar</button>
+              </div>
+              <div class="col col-md-4">
+                <button type="button" onClick="cerrar()" class="btn btn-info">Editar</button>
+              </div>
+            </div>
+            <div class="alert alert-success" id="pdfguardado" role="alert" data-html2canvas-ignore="true">
+              ¡Pdf Guardado!
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget pad50-65">
+      <div class="widget-title2">
+        <h2>Lista de Clientes</h2>
+      </div>
+
+      <div class="col col-md-12">
+        <div if="loadingmain" class="loader-inner ball-pulse align-middle">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Información</th>
+          </tr>
+        </thead>
+        <tbody id="tablaclientes">
+          <tr if="noclientes">
+            <td>
+              No hay clientes registrados.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
     <!-- Panel Content -->
     <!-- Vendor: Javascripts -->
@@ -61,7 +938,12 @@
     <script src="js/select2.min.js" type="text/javascript"></script>
     <script src="js/slick.min.js" type="text/javascript"></script>
     <script src="js/display.min.js" type="text/javascript"></script>
-    <script src="js/login.js" type="text/javascript"></script>
+    <script src="js/jspdf.min.js" type="text/javascript"></script>
+    <script src="js/html2canvas.min.js" type="text/javascript"></script>
+    <script src="js/smtp.js" type="text/javascript"></script>
+    <script src="js/smalltalk.min.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/app.js"></script>
     <!-- Our Website Javascripts -->
     <script src="js/isotope.min.js" type="text/javascript"></script>
     <script src="js/isotope-int.js" type="text/javascript"></script>
@@ -84,6 +966,23 @@
     <script src="js/jquery.poptrox.min.js" type="text/javascript"></script>
     <script src="js/styleswitcher.js" type="text/javascript"></script>
     <script src="js/main.js" type="text/javascript"></script>
+    <script>
+      $(function() {
+        $("#datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#datepickercliente").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#ultimacitapicker").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#ultimacitaclientepicker").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#datepickerreceta").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#datepickereditreceta").datepicker({ dateFormat: 'dd/mm/yy' });
+
+        $("#clienteregistrado").hide();
+        $("#alertaerror").hide();
+        $("#clienteactualizado").hide();
+        $("#actualizarerror").hide();
+        $("#pdfguardado").hide();
+      });
+    </script>
+
 </body>
 
 </html>

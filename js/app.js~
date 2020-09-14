@@ -74,25 +74,28 @@ function collect() {
 function createtable(doc) {
     let tr = document.createElement('tr');
     var folio = document.createElement('th');
-    var fecha = document.createElement('td');
+    var cita = document.createElement('td');
     var nombre = document.createElement('td');
     var telefono = document.createElement('td');
+    var email = document.createElement('td');
     var ver = document.createElement('td');
     var trimmed = doc.id.substring(0, 4);
 
     tr.setAttribute('id', doc.id);
 
     folio.textContent = trimmed;
-    fecha.textContent = doc.data().fecha;
+    cita.textContent = doc.data().ultimacita;
     nombre.textContent = doc.data().nombre;
     telefono.textContent = doc.data().telefono;
+    email.textContent = doc.data().correo;
     ver.innerHTML = '<button type="button" onClick="rendercliente(this.id)" id="' + doc.id + '"class="btn btn-primary btn-sm" data-toggle="modal" data-target=".cliente">Ver</button>'
 
     tabla.appendChild(tr);
     tr.appendChild(folio);
-    tr.appendChild(fecha);
+    tr.appendChild(cita);
     tr.appendChild(nombre);
     tr.appendChild(telefono);
+    tr.appendChild(email);
     tr.appendChild(ver);
 
 }
@@ -474,10 +477,34 @@ forma.addEventListener('submit', (e) => {
         diabetes = "Diabetes:";
     }
 
+    if (forma.cirugia.checked) {
+        cirugia = forma.cirugia.value
+    } else {
+        cirugia = "Cirugia:";
+    }
+
     if (forma.hipertension.checked) {
         hipertension = forma.hipertension.value
     } else {
         hipertension = "Hipertensión:";
+    }
+
+    if (forma.sinusitis.checked) {
+        sinusitis = forma.sinusitis.value
+    } else {
+        sinusitis = "Sinusitis:";
+    }
+
+    if (forma.dolordecabeza.checked) {
+        dolordecabeza = forma.dolordecabeza.value
+    } else {
+        dolordecabeza = "Dolor de Cabeza:";
+    }
+
+    if (forma.alergias.checked) {
+        alergias = forma.alergias.value
+    } else {
+        alergias = "Alergias:";
     }
 
     if (forma.cataratas.checked) {
@@ -558,38 +585,36 @@ forma.addEventListener('submit', (e) => {
 
     if(archivo.length > 0) {
         for (x = 0; x < archivo.length; ++x) {
-            var thisRef = storageRef.child("archivos/"+ forma.telefono.value + "/" + archivo[x].name);
+            var thisRef = storageRef.child("archivos/"+ forma.correo.value + "/" + archivo[x].name);
 
             thisRef.put(archivo[x]).then(function(snapshot) {
                 console.log('Uploaded a blob or file!');
             });
-
+            
             archivos[x] = archivo[x].name
         }
     }
-
+    
     console.log(archivos)
 
     db.collection('clientes').add({
             nombre: forma.nombre.value,
             telefono: forma.telefono.value,
+            correo: forma.correo.value,
             folio: folio,
             edad: forma.edad.value,
-            motivo: forma.motivo.value,
             ocupacion: forma.ocupacion.value,
             direccion: forma.direccion.value,
-            enfermedades: forma.enfermedades.value,
             sexo: forma.sexo.value,
             diabetes: diabetes,
-            alergias: forma.alergias.value,
-            tiempoDiabetes: forma.tiempoDiabetes.value,
-            tratamientoDiabetes: forma.tratamientoDiabetes.value,
+            cirugia: cirugia,
+            alergiamedicamento: forma.alergiamedicamento.value,
+            medicamentos: forma.medicamentos.value,
             otraenfermedad: forma.otraenfermedad.value,
             hipertension: hipertension,
-            tiempoHipertension: forma.tiempoHipertension.value,
-            tratamientoHipertension: forma.tratamientoHipertension.value,
-            pioOd: forma.pioOd.value,
-            pioOi: forma.pioOi.value,
+            sinusitis: sinusitis,
+            dolordecabeza: dolordecabeza,
+            alergias: alergias,
             cataratas: cataratas,
             glaucoma: glaucoma,
             ceguera: ceguera,
@@ -603,13 +628,27 @@ forma.addEventListener('submit', (e) => {
             anillos: anillos,
             carnosidad: carnosidad,
             hipersensibilidad: hipersensibilidad,
+            sphod: forma.sphod.value,
+            cilod: forma.cilod.value,
+            ejeod: forma.ejeod.value,
+            addod: forma.addod.value,
+            diamod: forma.diamod.value,
+            alturaod: forma.alturaod.value,
+            xeratometriaod: forma.xeratometriaod.value,
+            sphoi: forma.sphoi.value,
+            ciloi: forma.ciloi.value,
+            ejeoi: forma.ejeoi.value,
+            addoi: forma.addoi.value,
+            diamoi: forma.diamoi.value,
+            alturaoi: forma.alturaoi.value,
+            xeratometriaoi: forma.xeratometriaoi.value,
+            proximacita: forma.proximacita.value,
             avscod: forma.avscod.value,
             avscoi: forma.avscoi.value,
-            subjetivo: forma.subjetivo.value,
-            tx: forma.tx.value,
-            hora: forma.hora.value,
-            meganota: forma.meganota.value,
-            tipodelente: forma.tipodelente.value,
+            avceod: forma.avceod.value,
+            avceoi: forma.avceoi.value,
+            nota: forma.nota.value,
+            ultimacita: forma.ultimacita.value,
             fecha: forma.ultimacita.value,
             archivos: archivos
         })
@@ -633,42 +672,22 @@ function cerrar() {
     $('.cliente').modal('hide')
         $('.cliente').on('hidden.bs.modal', function() {
             if (cerrado == true) {
-            console.log("cerro")
             $('.edit').modal('show')
             cerrado = false;
             }
         })
-    
+
 
     $$.single("#nombrecliente").setAttribute("value", cliente.nombre)
     $$.single("#telefonocliente").setAttribute("value", cliente.telefono)
+    $$.single("#correocliente").setAttribute("value", cliente.correo)
     $$.single("#direccioncliente").setAttribute("value", cliente.direccion)
     $$.single("#ocupacioncliente").setAttribute("value", cliente.ocupacion)
-    
-    $$.single("#enfermedadescliente").setAttribute("value", cliente.enfermedades)
-    $$.single("#motivocliente").setAttribute("value", cliente.motivo)
-    $$.single("#tiempoDiabetescliente").setAttribute("value", cliente.tiempoDiabetes)
-    $$.single("#tiempoHipertensioncliente").setAttribute("value", cliente.tiempoHipertension)
-    $$.single("#tratamientoDiabetescliente").setAttribute("value", cliente.tratamientoDiabetes)
-    $$.single("#tratamientoHipertensioncliente").setAttribute("value", cliente.tratamientoHipertension)
-    $$.single("#alergiascliente").setAttribute("value", cliente.alergias)
-    $$.single("#otraenfermedadcliente").setAttribute("value", cliente.enfermedades)
-    $$.single("#txcliente").setAttribute("value", cliente.tx)
-    $$.single("#pioOicliente").setAttribute("value", cliente.pioOi)
-    $$.single("#pioOdcliente").setAttribute("value", cliente.pioOd)
-    $$.single("#horacliente").setAttribute("value", cliente.hora)
-    $$.single("#avscoicliente").setAttribute("value", cliente.avscoi)
-    $$.single("#avscodcliente").setAttribute("value", cliente.avscod)
-    
-    $("#meganotacliente").val(cliente.meganota)
-    $("#tipodelentecliente").val(cliente.tipodelente);
-    $("#subjetivocliente").val(cliente.subjetivo);
-    
     $$.single("#edadcliente").setAttribute("value", cliente.edad)
-
-
-    $$.single("#ultimacitaclientepicker").setAttribute("value", cliente.fecha)
-    
+    $$.single("#medicamentoscliente").setAttribute("value", cliente.medicamentos.replace("Medicamentos que toma: ", ""))
+    $$.single("#alergiamedicamentocliente").setAttribute("value", cliente.alergiamedicamento.replace("Alergia por los medicamentos: ", ""))
+    $$.single("#otraenfermedadcliente").setAttribute("value", cliente.otraenfermedad.replace("Otras Enfermedades: ", ""))
+    $$.single("#ultimacitaclientepicker").setAttribute("value", cliente.ultimacita)
     if (cliente.sexo == "Masculino") {
         $('#masculinocliente').prop('checked', true);
         $('#femeninocliente').prop('checked', false);
@@ -683,10 +702,40 @@ function cerrar() {
         $('#diabetescliente').prop('checked', false);
     }
 
+    if (cliente.cirugia == "Cirugia: <i class='fa fa-check'></i>") {
+        $('#cirugiacliente').prop('checked', true);
+    } else {
+        $('#cirugiacliente').prop('checked', false);
+    }
+
     if (cliente.hipertension == "Hipertensión: <i class='fa fa-check'></i>") {
         $('#hipertensioncliente').prop('checked', true);
     } else {
         $('#hipertensioncliente').prop('checked', false);
+    }
+
+    if (cliente.sinusitis == "Sinusitis: <i class='fa fa-check'></i>") {
+        $('#sinusitiscliente').prop('checked', true);
+    } else {
+        $('#sinusitiscliente').prop('checked', false);
+    }
+
+    if (cliente.carnosidad == "Carnosidad: <i class='fa fa-check'></i>") {
+        $('#carnosidadcliente').prop('checked', true);
+    } else {
+        $('#carnosidadcliente').prop('checked', false);
+    }
+
+    if (cliente.dolordecabeza == "Dolor de Cabeza: <i class='fa fa-check'></i>") {
+        $('#dolordecabezacliente').prop('checked', true);
+    } else {
+        $('#dolordecabezacliente').prop('checked', false);
+    }
+
+    if (cliente.alergias == "Alergias: <i class='fa fa-check'></i>") {
+        $('#alergiascliente').prop('checked', true);
+    } else {
+        $('#alergiascliente').prop('checked', false);
     }
 
     if (cliente.cataratas == "Cataratas: <i class='fa fa-check'></i>") {
@@ -758,6 +807,48 @@ function cerrar() {
         $('#hipersensibilidadcliente').prop('checked', false);
     }
 
+    $$.single("#sphodcliente").setAttribute("value", cliente.sphod)
+
+    $$.single("#cilodcliente").setAttribute("value", cliente.cilod)
+
+    $$.single("#ejeodcliente").setAttribute("value", cliente.ejeod)
+
+    $$.single("#addodcliente").setAttribute("value", cliente.addod)
+
+    $$.single("#diamodcliente").setAttribute("value", cliente.diamod)
+
+    $$.single("#alturaodcliente").setAttribute("value", cliente.alturaod)
+
+    $$.single("#xeratometriaodcliente").setAttribute("value", cliente.xeratometriaod)
+
+
+    $$.single("#sphoicliente").setAttribute("value", cliente.sphoi)
+
+    $$.single("#ciloicliente").setAttribute("value", cliente.ciloi)
+
+    $$.single("#ejeoicliente").setAttribute("value", cliente.ejeoi)
+
+    $$.single("#addoicliente").setAttribute("value", cliente.addoi)
+
+    $$.single("#diamoicliente").setAttribute("value", cliente.diamoi)
+
+    $$.single("#alturaoicliente").setAttribute("value", cliente.alturaoi)
+
+    $$.single("#xeratometriaoicliente").setAttribute("value", cliente.xeratometriaoi)
+
+    $$.single("#avscodcliente").setAttribute("value", cliente.avscod)
+
+    $$.single("#avscoicliente").setAttribute("value", cliente.avscoi)
+
+    $$.single("#avceodcliente").setAttribute("value", cliente.avceod)
+
+    $$.single("#avceoicliente").setAttribute("value", cliente.avceoi)
+
+    $$.single("#datepickercliente").setAttribute("value", cliente.proximacita)
+
+    $$.single("#notacliente").innerText = cliente.nota
+
+
 }
 
 var editarcerrado = false;
@@ -795,11 +886,11 @@ editar.addEventListener('submit', (e) => {
     } else {
         diabetes = "Diabetes:";
     }
-    
-    if (editar.carnosidadcliente.checked) {
-        carnosidad = editar.carnosidadcliente.value
+
+    if (editar.cirugiacliente.checked) {
+        cirugia = editar.cirugiacliente.value
     } else {
-        carnosidad = "Carnosidad:";
+        cirugia = "Cirugia:";
     }
 
     if (editar.hipertensioncliente.checked) {
@@ -808,6 +899,29 @@ editar.addEventListener('submit', (e) => {
         hipertension = "Hipertensión:";
     }
 
+    if (editar.carnosidadcliente.checked) {
+        carnosidad = editar.carnosidadcliente.value
+    } else {
+        carnosidad = "Carnosidad:";
+    }
+
+    if (editar.sinusitiscliente.checked) {
+        sinusitis = editar.sinusitiscliente.value
+    } else {
+        sinusitis = "Sinusitis:";
+    }
+
+    if (editar.dolordecabezacliente.checked) {
+        dolordecabeza = editar.dolordecabezacliente.value
+    } else {
+        dolordecabeza = "Dolor de Cabeza:";
+    }
+
+    if (editar.alergiascliente.checked) {
+        alergias = editar.alergiascliente.value
+    } else {
+        alergias = "Alergias:";
+    }
 
     if (editar.cataratascliente.checked) {
         cataratas = editar.cataratascliente.value
@@ -875,48 +989,44 @@ editar.addEventListener('submit', (e) => {
     } else {
         hipersensibilidad = "Hipersensibilidad Solar:";
     }
-
+    
     var archivo = document.getElementById("archivocliente").files;
 
-
+        
     var archivos = {}
 
     if(archivo.length > 0) {
         for (x = 0; x < archivo.length; ++x) {
-            var thisRef = storageRef.child("archivos/"+ cliente.telefono + "/" + archivo[x].name);
+            var thisRef = storageRef.child("archivos/"+ cliente.correo + "/" + archivo[x].name);
 
             thisRef.put(archivo[x]).then(function(snapshot) {
                 console.log('Uploaded a blob or file!');
             });
-
+            
             cliente.archivos[cliente.archivos.length] = archivo[x].name
         }
     }
-
+    
+    console.log(cliente.archivos)
 
     db.collection('clientes').doc(previd).update({
             nombre: editar.nombrecliente.value,
             telefono: editar.telefonocliente.value,
+            correo: editar.correocliente.value,
             edad: editar.edadcliente.value,
             ocupacion: editar.ocupacioncliente.value,
             direccion: editar.direccioncliente.value,
             sexo: editar.sexocliente.value,
-            motivo: editar.motivocliente.value,
-            alergias: editar.alergiascliente.value,
-            tiempoHipertension: editar.tiempoHipertensioncliente.value,
-            tiempoDiabetes: editar.tiempoDiabetescliente.value,
-            tratamientoHipertension: editar.tratamientoHipertensioncliente.value,
-            tratamientoDiabetes: editar.tratamientoDiabetescliente.value,
-            enfermedades: editar.enfermedadescliente.value,
-            tipodelente: editar.tipodelentecliente.value,
-            avscoi: editar.avscoicliente.value,
-            avscod: editar.avscodcliente.value,
-            pioOi: editar.pioOicliente.value,
-            pioOd: editar.pioOdcliente.value,
-            subjetivo: editar.subjetivocliente.value,
             diabetes: diabetes,
             hipertension: hipertension,
+            sinusitis: sinusitis,
+            dolordecabeza: dolordecabeza,
+            alergias: alergias,
             cataratas: cataratas,
+            cirugia: cirugia,
+            medicamentos: editar.medicamentoscliente.value,
+            otraenfermedad: editar.otraenfermedadcliente.value,
+            alergiamedicamento: editar.alergiamedicamentocliente.value,
             glaucoma: glaucoma,
             ceguera: ceguera,
             carnosidad: carnosidad,
@@ -929,8 +1039,27 @@ editar.addEventListener('submit', (e) => {
             miodesopsia: miodesopsia,
             anillos: anillos,
             hipersensibilidad: hipersensibilidad,
-            fecha: editar.fechacliente.value,
-            meganota: editar.meganotacliente.value,
+            sphod: editar.sphodcliente.value,
+            cilod: editar.cilodcliente.value,
+            ejeod: editar.ejeodcliente.value,
+            addod: editar.addodcliente.value,
+            diamod: editar.diamodcliente.value,
+            alturaod: editar.alturaodcliente.value,
+            xeratometriaod: editar.xeratometriaodcliente.value,
+            sphoi: editar.sphoicliente.value,
+            ciloi: editar.ciloicliente.value,
+            ejeoi: editar.ejeoicliente.value,
+            addoi: editar.addoicliente.value,
+            diamoi: editar.diamoicliente.value,
+            alturaoi: editar.alturaoicliente.value,
+            xeratometriaoi: editar.xeratometriaoicliente.value,
+            avscod: editar.avscodcliente.value,
+            avscoi: editar.avscoicliente.value,
+            avceod: editar.avceodcliente.value,
+            avceoi: editar.avceoicliente.value,
+            proximacita: editar.proximacitacliente.value,
+            nota: editar.notacliente.value,
+            ultimacita: editar.ultimacitacliente.value,
             archivos: cliente.archivos
         })
         .then(function() {
@@ -958,14 +1087,25 @@ receta.addEventListener('submit', (e) => {
 var fecha = new Date();
 id = fecha.toDateString()
     db.collection('clientes').doc(previd).collection('recetas').add({
-            hora: receta.horareceta.value,
-            tx: receta.txreceta.value,
-            subjetivoreceta: receta.subjetivoreceta.value,
-            avscoireceta: receta.avscoireceta.value,
-            avscodreceta: receta.avscodreceta.value,
-            pioOdreceta: receta.pioOdreceta.value,
-            pioOireceta: receta.pioOireceta.value,
-            meganota: receta.meganotareceta.value,
+            sphod: receta.sphodreceta.value,
+            cilod: receta.cilodreceta.value,
+            ejeod: receta.ejeodreceta.value,
+            addod: receta.addodreceta.value,
+            diamod: receta.diamodreceta.value,
+            alturaod: receta.alturaodreceta.value,
+            xeratometriaod: receta.xeratometriaodreceta.value,
+            sphoi: receta.sphoireceta.value,
+            ciloi: receta.ciloireceta.value,
+            ejeoi: receta.ejeoireceta.value,
+            addoi: receta.addoireceta.value,
+            diamoi: receta.diamoireceta.value,
+            alturaoi: receta.alturaoireceta.value,
+            xeratometriaoi: receta.xeratometriaoireceta.value,
+            avscod: receta.avscodreceta.value,
+            avscoi: receta.avscoireceta.value,
+            avceod: receta.avceodreceta.value,
+            avceoi: receta.avceoireceta.value,
+            nota: receta.notareceta.value,
             fecha: receta.fechareceta.value
         })
         .then(function() {
@@ -994,14 +1134,15 @@ function rendercliente(id) {
         if (doc.exists) {
             cliente = {
                 nombre: doc.data().nombre,
+                correo: doc.data().correo,
                 sexo: doc.data().sexo,
                 telefono: doc.data().telefono,
                 edad: doc.data().edad,
-                motivo: doc.data().motivo,
                 ocupacion: doc.data().ocupacion,
                 direccion: doc.data().direccion,
                 diabetes: doc.data().diabetes,
                 hipertension: doc.data().hipertension,
+                sinusitis: doc.data().sinusitis,
                 dolordecabeza: doc.data().dolordecabeza,
                 alergias: doc.data().alergias,
                 cataratas: doc.data().cataratas,
@@ -1009,7 +1150,9 @@ function rendercliente(id) {
                 ceguera: doc.data().ceguera,
                 otro: doc.data().otro,
                 cirugia: doc.data().cirugia,
-                enfermedades: doc.data().enfermedades,
+                medicamentos: "Medicamentos que toma: " + doc.data().medicamentos,
+                alergiamedicamento: "Alergia por los medicamentos: " + doc.data().alergiamedicamento,
+                otraenfermedad: "Otras Enfermedades: " + doc.data().otraenfermedad,
                 dolorojos: doc.data().dolorojos,
                 ojosllorosos: doc.data().ojosllorosos,
                 comezon: doc.data().comezon,
@@ -1026,21 +1169,21 @@ function rendercliente(id) {
                 ejeoi: doc.data().ejeoi,
                 addod: doc.data().addod,
                 carnosidad: doc.data().carnosidad,
-                avscoi: doc.data().avscoi,
+                addoi: doc.data().addoi,
+                diamod: doc.data().diamod,
+                diamoi: doc.data().diamoi,
+                alturaod: doc.data().alturaod,
+                alturaoi: doc.data().alturaoi,
+                xeratometriaoi: doc.data().xeratometriaoi,
+                xeratometriaod: doc.data().xeratometriaod,
+                proximacita: doc.data().proximacita,
                 avscod: doc.data().avscod,
-                pioOd: doc.data().pioOd,
-                pioOi: doc.data().pioOi,
-                subjetivo: doc.data().subjetivo,
-                tx: doc.data().tx,
-                hora: doc.data().hora,
-                meganota: doc.data().meganota,
-                tipodelente: doc.data().tipodelente,
-                fecha: doc.data().fecha,
+                avscoi: doc.data().avscoi,
+                avceod: doc.data().avceod,
+                avceoi: doc.data().avceoi,
+                previacita: doc.data().fecha,
+                ultimacita: doc.data().ultimacita,
                 nota: doc.data().nota,
-                tiempoDiabetes: doc.data().tiempoDiabetes,
-                tratamientoDiabetes: doc.data().tratamientoDiabetes,
-                tiempoHipertension: doc.data().tiempoHipertension,
-                tratamientoHipertension: doc.data().tratamientoHipertension,
                 ids: "Folio - " + id.substring(0, 4),
                 archivos: doc.data().archivos
             };
@@ -1051,17 +1194,17 @@ function rendercliente(id) {
             }
 
             loadingcliente = false;
-
+            
             var ul = document.getElementById("adjuntos");
-            var child = ul.lastElementChild;
-              while (child) {
-                  ul.removeChild(child);
-                  child = ul.lastElementChild;
-              }
-
+            var child = ul.lastElementChild;  
+              while (child) { 
+                  ul.removeChild(child); 
+                  child = ul.lastElementChild; 
+              } 
+            
             if (cliente.archivos) {
                 for (var object in cliente.archivos) {
-                    storageRef.child('archivos/' + cliente.telefono + "/" + cliente.archivos[object]).getDownloadURL().then(function(i) {
+                    storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]).getDownloadURL().then(function(i) {
                         var newAnchor = document.createElement("a");
                         var regex = i.match(/%2..*%2F(.*?)\?alt/)
                         var url = regex[1].replace(/%20/g, " ");
@@ -1105,7 +1248,7 @@ function rendercliente(id) {
 function borrarcliente() {
     if (confirm("¿Quieres borrar a este cliente?")) {
         db.collection('clientes').doc(previd).delete();
-
+        
         if (cliente.archivos) {
             for (var object in cliente.archivos) {
                 var desertRef = storageRef.child('archivos/' + cliente.correo + "/" + cliente.archivos[object]);
@@ -1117,7 +1260,7 @@ function borrarcliente() {
 
             }
         }
-
+        
         $("[data-dismiss=modal]").trigger({
             type: "click"
         });
