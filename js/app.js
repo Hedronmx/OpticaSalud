@@ -341,47 +341,25 @@ function editarreceta (id){
 
     db.collection('clientes').doc(previd).collection("recetas").doc(id).get().then(function(doc) {
     if (doc.exists) {
-        console.log("Document data:", doc.data());
-        $$.single("#sphodeditreceta").setAttribute("value", doc.data().sphod )
+    
+		  $$.single("#avscodeditreceta").setAttribute("value", doc.data().avscodreceta)
+		  
+		  $$.single("#avscoieditreceta").setAttribute("value", doc.data().avscoireceta)
+		  
+		  $$.single("#pioOdeditreceta").setAttribute("value", doc.data().pioOdreceta)
+		  
+		  $$.single("#pioOieditreceta").setAttribute("value", doc.data().pioOireceta)
+		  
+		  $$.single("#horaeditreceta").setAttribute("value", doc.data().horareceta)
+		  
+		  $$.single("#txeditreceta").setAttribute("value", doc.data().horareceta)
+		  
+		  $$.single("#datepickereditreceta").setAttribute("value", doc.data().fechareceta)
+		  
+		  $("#meganotaeditreceta").val(doc.data().meganotareceta)
+		  
+		  $("#subjetivoeditreceta").val(cliente.subjetivoreceta)
 
-        $$.single("#cilodeditreceta").setAttribute("value", doc.data().cilod )
-
-        $$.single("#ejeodeditreceta").setAttribute("value", doc.data().ejeod)
-
-        $$.single("#addodeditreceta").setAttribute("value", doc.data().addod)
-
-        $$.single("#diamodeditreceta").setAttribute("value", doc.data().diamod)
-
-        $$.single("#alturaodeditreceta").setAttribute("value", doc.data().alturaod)
-
-        $$.single("#xeratometriaodeditreceta").setAttribute("value", doc.data().xeratometriaod)
-
-
-        $$.single("#sphoieditreceta").setAttribute("value", doc.data().sphoi)
-
-        $$.single("#ciloieditreceta").setAttribute("value", doc.data().ciloi)
-
-        $$.single("#ejeoieditreceta").setAttribute("value", doc.data().ejeoi)
-
-        $$.single("#addoieditreceta").setAttribute("value", doc.data().addoi)
-
-        $$.single("#diamoieditreceta").setAttribute("value", doc.data().diamoi)
-
-        $$.single("#alturaoieditreceta").setAttribute("value", doc.data().alturaoi)
-
-        $$.single("#xeratometriaoieditreceta").setAttribute("value", doc.data().xeratometriaoi)
-
-        $$.single("#avscodeditreceta").setAttribute("value", doc.data().avscod)
-
-        $$.single("#avscoieditreceta").setAttribute("value", doc.data().avscoi)
-
-        $$.single("#avceodeditreceta").setAttribute("value", doc.data().avceod)
-
-        $$.single("#avceoieditreceta").setAttribute("value", doc.data().avceoi)
-
-        $$.single("#datepickereditreceta").setAttribute("value", doc.data().fecha)
-
-        $$.single("#notaeditreceta").innerText = doc.data().nota
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -407,26 +385,15 @@ editformreceta.addEventListener('submit', (e) => {
     editareceta = true;
 
     db.collection('clientes').doc(previd).collection("recetas").doc(recetaid).update({
-            sphod: editformreceta.sphodeditreceta.value,
-            cilod: editformreceta.cilodeditreceta.value,
-            ejeod: editformreceta.ejeodeditreceta.value,
-            addod: editformreceta.addodeditreceta.value,
-            diamod: editformreceta.diamodeditreceta.value,
-            alturaod: editformreceta.alturaodeditreceta.value,
-            xeratometriaod: editformreceta.xeratometriaodeditreceta.value,
-            sphoi: editformreceta.sphoieditreceta.value,
-            ciloi: editformreceta.ciloieditreceta.value,
-            ejeoi: editformreceta.ejeoieditreceta.value,
-            addoi: editformreceta.addoieditreceta.value,
-            diamoi: editformreceta.diamoieditreceta.value,
-            alturaoi: editformreceta.alturaoieditreceta.value,
-            xeratometriaoi: editformreceta.xeratometriaoieditreceta.value,
-            avscod: editformreceta.avscodeditreceta.value,
-            avscoi: editformreceta.avscoieditreceta.value,
-            avceod: editformreceta.avceodeditreceta.value,
-            avceoi: editformreceta.avceoieditreceta.value,
-            nota: editformreceta.notaeditreceta.value,
-            fecha: editformreceta.datepickereditreceta.value,
+            avscodreceta: editformreceta.avscodeditreceta.value,
+            avscoireceta: editformreceta.avscoieditreceta.value,
+            pioOdreceta: editformreceta.pioOdeditreceta.value,
+            pioOireceta: editformreceta.pioOieditreceta.value,
+            subjetivoreceta: editformreceta.subjetivoeditreceta.value,
+            txreceta: editformreceta.txeditreceta.value,
+            horareceta: editformreceta.horaeditreceta.value,
+            meganotareceta: editformreceta.meganotaeditreceta.value,
+            fechareceta: editformreceta.fechaeditreceta.value,
         })
         .then(function() {
             console.log("Document successfully written!");
@@ -958,15 +925,15 @@ receta.addEventListener('submit', (e) => {
 var fecha = new Date();
 id = fecha.toDateString()
     db.collection('clientes').doc(previd).collection('recetas').add({
-            hora: receta.horareceta.value,
-            tx: receta.txreceta.value,
+            horareceta: receta.horareceta.value,
+            txreceta: receta.txreceta.value,
             subjetivoreceta: receta.subjetivoreceta.value,
             avscoireceta: receta.avscoireceta.value,
             avscodreceta: receta.avscodreceta.value,
             pioOdreceta: receta.pioOdreceta.value,
             pioOireceta: receta.pioOireceta.value,
-            meganota: receta.meganotareceta.value,
-            fecha: receta.fechareceta.value
+            meganotareceta: receta.meganotareceta.value,
+            fechareceta: receta.fechareceta.value
         })
         .then(function() {
             console.log("Document successfully written!");
