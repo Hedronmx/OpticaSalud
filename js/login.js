@@ -2,7 +2,7 @@
 var $$ = new DisplayJS(window)
 // asigning a value for the var name
 var name = ""
-var password = "opticasalud"
+var password = "0pticasalud!"
 const input = document.querySelector('#login')
 $('.alert').hide()
 $('.success').hide()
